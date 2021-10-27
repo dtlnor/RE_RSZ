@@ -2566,11 +2566,11 @@ void fakeGameObject() {
     FSeek(getAlignedOffset(FTell(), 4));
     local uint size0;
     if (size0 && FTell()+4+size0*2 <= FileSize())
-        FSkip(4 + 2*size0)
+        FSkip(4 + 2*size0);
     FSeek(getAlignedOffset(FTell(), 4));
     local uint size1;
     if (size1 && FTell()+4+size1*2 <= FileSize())
-        FSkip(4 + 2*size1)
+        FSkip(4 + 2*size1);
     FSeek(getAlignedOffset(FTell()+2, 4));
     uint timeScale;
 }
