@@ -14,21 +14,21 @@
 
 //------------------------------------------------
 //              Option:                                                           //Effect:
-local string    RSZVersion       <hidden=false>       = "DMC5";                    //change between RE2, RE3, RE8 or DMC5
+local string    RSZVersion       <hidden=false>       = "MHRise";                    //change between RE2, RE3, RE8 or DMC5
 local int       Nesting          <hidden=true>        = TRUE;                      //Attempt to nest class instances inside eachother
-local int       ShowAlignment    <hidden=true>        = FALSE;                     //Show metadata for each variable
-local int       ShowChildRSZs    <hidden=true>        = FALSE;                     //Show all RSZs one after another, non-nested. Disabling hides nested RSZHeaders
+local int       ShowAlignment    <hidden=true>        = TRUE;                     //Show metadata for each variable
+local int       ShowChildRSZs    <hidden=true>        = TRUE;                     //Show all RSZs one after another, non-nested. Disabling hides nested RSZHeaders
 local int       UseSpacers       <hidden=true>        = TRUE;                      //Show blank rows between some structs
 local int       AutoDetectGame   <hidden=true>        = TRUE;                      //Automatically detect RSZVersion based on the name + ext of the file being viewed
 local int       ReadBHVTHeader   <hidden=true>        = TRUE;                      //Read BHVT header with UVAR
 local int       RedetectBHVT     <hidden=true>        = TRUE;                      //Will automatically redetect the next BHVT node if there is a problem 
 local int       HideRawData      <hidden=true>        = FALSE;                     //Hides RawData struct
-local int       HideRawNodes     <hidden=true>        = TRUE;                      //Hides RawNodes struct
+local int       HideRawNodes     <hidden=true>        = FALSE;                      //Hides RawNodes struct
 local int       SortRequestSets  <hidden=true>        = TRUE;                      //Sorts RCOL RequestSets by their IDs
 local int       ExposeUserDatas  <hidden=true>        = TRUE;                      //Makes RSZFiles that contain embedded userDatas start after the Userdatas, for ctrl+J
 
 //Path to Noesis.exe
-local wstring NoesisPath <hidden=true> =            "C:\\Program Files (x86)\\Noesis\\Noesis.exe";
+local wstring NoesisPath <hidden=true> =            "C:\\MyProgram\\RETool\\noesisv4456\\Noesis.exe";
 
 //Game							                    //Extracted Path
 local wstring DMC5Path <hidden=true> =              "D:\\modmanager\\REtool\\DMC_chunk_000\\natives\\x64\\";
@@ -36,7 +36,7 @@ local wstring RE2Path <hidden=true> =               "D:\\modmanager\\REtool\\RE2
 local wstring RE3Path <hidden=true> =               "D:\\modmanager\\REtool\\RE3_chunk_000\\natives\\stm\\";
 local wstring RE7Path <hidden=true> =               "D:\\modmanager\\REtool\\RE7_chunk_000\\natives\\x64\\";
 local wstring RE8Path <hidden=true> =               "D:\\modmanager\\REtool\\RE8_chunk_000\\natives\\stm\\";
-local wstring MHRPath <hidden=true> =               "D:\\modmanager\\REtool\\MHR_chunk_000\\natives\\stm\\";
+local wstring MHRPath <hidden=true> =               "C:\\Program Files (x86)\\Steam\\steamapps\\common\\MonsterHunterRiseDemo\\re_chunk_000_raw\\natives\\stm\\";
 
 
 //RSZ Parser By Darkness:
@@ -2915,6 +2915,7 @@ if (ReadUInt(0)==id_SCN || ReadUInt(0)==id_PFB || ReadUInt(0)==id_USR || ReadUIn
                 uint64 userdataPathsOffset;
                 uint64 variableOffset;
                 uint64 baseVariableOffset;
+                uint64 baseunknOffset; //it reads a empty 16 bytes, seperator?
                 FSeek(startof(BHVT)+16);
                 struct {
                     struct ReadStruct actionOffset(0, startof(BHVT));
@@ -2944,12 +2945,12 @@ if (ReadUInt(0)==id_SCN || ReadUInt(0)==id_PFB || ReadUInt(0)==id_USR || ReadUIn
                         if (sizeof(String) == 0) 
                             break; 
                     }
-                } mNamePool;
+                } mNamePool<bgcolor=0xAAAAAA>;
                 FSeek(resourcePathsOffset+startof(this));
-                struct BHVTStringPool mPathNamePool;
+                struct BHVTStringPool mPathNamePool<bgcolor=0xAAAAAA>;
                 if (exists(userdataPathsOffset) && ReadUInt(userdataPathsOffset+startof(this)) != 2) {
                     FSeek(userdataPathsOffset+startof(this));
-                    struct BHVTStringPool mUserDataPathNamePool;
+                    struct BHVTStringPool mUserDataPathNamePool<bgcolor=0xAAAAAA>;
                 }
                 if (ReadBHVTHeader) {
                     FSeek(userdataPathsOffset+startof(this)-4); 
@@ -2969,9 +2970,9 @@ if (ReadUInt(0)==id_SCN || ReadUInt(0)==id_PFB || ReadUInt(0)==id_USR || ReadUIn
                         uint64 thisOffset;
                 }
                 FSeek(startof(baseVariableOffset) + 16);
-            } BHVT;
+            } BHVT<bgcolor=0xAAAAAA>;
         }
-    } Header;
+    } Header<bgcolor=0xAAAAAA>;
 else {
     Printf("Header not detected\n");
     struct {
@@ -2980,16 +2981,17 @@ else {
     } Header;
     FSkip(-1);
 }
-    
+    #include "TagsCollection.bt"
+
     typedef struct {
         struct BHVTCount mTagsCount(1); 
         if (!finished) {
             if (mTagsCount.Count > 1) 
                 struct { 
                     for (i=0; i<mTagsCount.Count; i++) 
-                        int mTags <format=hex>; 
+                        TagsCollection mTags <format=hex>; 
                 } mTags; 
-            else if (mTagsCount.Count == 1) int mTags <format=hex>;
+            else if (mTagsCount.Count == 1) TagsCollection mTags <format=hex>;
         } else {
             if (mTagsCount.Count && mTagsCount.Count < FileSize() && FTell() + mTagsCount.Count * 4 < RSZOffset)
                 if (mTagsCount.Count > 1) { 
@@ -3295,7 +3297,7 @@ else {
                         }
                         mNodeCounter++;
                     }
-                } BHVTNode <name=ReadBHVTNodeName, read=ReadBHVTNode, optimize=false, open=suppress>;
+                } BHVTNode <name=ReadBHVTNodeName, read=ReadBHVTNode, optimize=false, open=suppress, bgcolor=0xAAAAAA>;
                 
                 local uint maxDivs <hidden=true> = mNodeCount / 100 + 1;
                 local uint waypoints[maxDivs] <hidden=true>; 
@@ -3317,15 +3319,15 @@ else {
             else struct RAWNODES RawNodes <open=suppress>;
             
             struct {
-                uint32 size;
-                if (size && size * 4 + FTell() < FileSize())
-                    struct { uint zeroes[size]; } zeroes;
-                uint32 size2;
-                if (size2 && size2 * 4 + FTell() < FileSize()) 
-                    struct { uint zeroes2[size2]; } zeroes2;
+                uint32 actionSize;
+                if (actionSize && actionSize * 4 + FTell() < FileSize())
+                    struct { uint actionZeros[actionSize]; } actionZeroes;
+                uint32 staticActionSize;
+                if (staticActionSize && staticActionSize * 4 + FTell() < FileSize()) 
+                    struct { uint staticActionZeroes[staticActionSize]; } staticActionZeroes;
             } zeroes;
             
-        } BehaviorTree;
+        } BehaviorTree<bgcolor=0xAAAAAA>;
     }
 
         wstring ReadBHVTNodeName(BHVTNode &b) { 
@@ -4738,7 +4740,7 @@ typedef struct(BHVTlvl lv, ubyte isList) {
 
 typedef struct(BHVTlvl lv) {
     local BHVTlvl lv <hidden=true> = lv;
-    int hash <format=hex>;
+    TagsCollection hash <format=hex>;
     if (finished && hash != -1 && hash != 0) {
         local short lvl <hidden=true> = getBHVTLevel(lv);
         if (lv == id_TransitionId) {
