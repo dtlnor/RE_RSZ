@@ -4677,9 +4677,29 @@ typedef struct(BHVTlvl lv, ubyte isList) {
         if (ReadUByte(FTell()+2) == 0) {
             int id : 16;
             int ukn : 8;
-            int ukn2 : 8;
-        } else 
+            int ukn2 : 8;        
+            if ( ukn2 == 64) {
+	            switch (lv) {
+		            case id_Actions: lv = id_staticActions; break;
+		            case id_SelectorCallers: lv = id_staticSelectorCallers; break;
+		            case id_Conditions: lv = id_staticConditions; break;
+		            case id_transitionEvents: lv = id_staticTransitionEvents; break;
+		            case id_expressionTreeConditions: lv = id_staticExpressionTreeConditions; break;
+		            default: break;
+                }
+            } 
+        } else {
             int id;
+	        switch (lv) {
+		        case id_staticActions: lv = id_Actions; break;
+		        case id_staticSelectorCallers: lv = id_SelectorCallers; break;
+		        case id_staticConditions: lv = id_Conditions; break;
+		        case id_staticTransitionEvents: lv = id_transitionEvents; break;
+		        case id_staticExpressionTreeConditions: lv = id_expressionTreeConditions; break;
+		        default: break;
+            }
+        }
+
         
         if (finished && id > -1) {
             local short lvl <hidden=true> = getBHVTLevel(lv);
