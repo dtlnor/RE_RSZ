@@ -16,7 +16,7 @@
 //              Option:                                                           //Effect:
 local string    RSZVersion       <hidden=false>       = "MHRise";                    //change between RE2, RE3, RE8 or DMC5
 local int       Nesting          <hidden=true>        = TRUE;                      //Attempt to nest class instances inside eachother
-local int       ShowAlignment    <hidden=true>        = TRUE;                     //Show metadata for each variable
+local int       ShowAlignment    <hidden=true>        = FALSE;                     //Show metadata for each variable
 local int       ShowChildRSZs    <hidden=true>        = TRUE;                     //Show all RSZs one after another, non-nested. Disabling hides nested RSZHeaders
 local int       UseSpacers       <hidden=true>        = TRUE;                      //Show blank rows between some structs
 local int       AutoDetectGame   <hidden=true>        = TRUE;                      //Automatically detect RSZVersion based on the name + ext of the file being viewed
@@ -1491,7 +1491,7 @@ typedef struct(uint32 classHash, ubyte fieldIndex) {
         Printf("Empty struct %s\n", ReadRSZInstanceName(parentof(this))); 
         FSeek(startof(this));
     }
-} RSZVariable <optimize=false, name=ReadRSZVariableName, read=ReadRSZVariable, write=WriteRSZVariable, comment=ReadRSZVariableComment>;
+} RSZVariable <optimize=false, name=ReadRSZVariableName, read=ReadRSZVariable, write=WriteRSZVariable, comment=ReadRSZVariableComment, bgcolor=0xAAABBB>;
 
     string ReadRSZVariableComment(RSZVariable &r) { if (exists(r.data.GameObjectRef)) return r.data.GameObjectRef; return ""; }
     
@@ -2075,7 +2075,7 @@ typedef struct {
     }
     if (FTell()==startof(this))
         Printf(name + "\n");
-} RSZInstance <name=ReadRSZInstanceName, read=ReadRSZInstance, write=WriteRSZInstance>;
+} RSZInstance <name=ReadRSZInstanceName, read=ReadRSZInstance, write=WriteRSZInstance, bgcolor=0xAAABBB>;
 
     wstring ReadRSZInstanceName(RSZInstance &r) { 
         local ushort lvl <hidden=true>;
@@ -2459,7 +2459,7 @@ typedef struct {
             uint64 HashDataOffsets[4];
             FSeek(startof(HashDataOffsets)+32);
         }
-    } Header;
+    } Header<bgcolor=0xAAABBB>;
     if (Header.magic == id_uvar) {
         if (Header.dataOffset + 64 < startof(this))
             local uint start = startof(this); 
@@ -2509,7 +2509,7 @@ typedef struct {
                 } EmbeddedUVARs;
         }
     }
-} UVAR <read=ReadUVAR>;
+} UVAR <read=ReadUVAR,bgcolor=0xAAABBB>;
 
     wstring ReadUVAR (UVAR &input) {
         if (exists(input.Data.Var[0]))
@@ -2522,7 +2522,7 @@ struct OBJECTID(int lv) {
     local int level <hidden=true> = lv;
 };
 
-typedef OBJECTID ObjectId <read=ReadObjectIdTitle, write=WriteObjectId>;
+typedef OBJECTID ObjectId <read=ReadObjectIdTitle, write=WriteObjectId,bgcolor=0xAAABBB>;
 
     wstring ReadObjectIdName(ObjectId &o) {
         local string s;
@@ -2978,7 +2978,7 @@ else {
     struct {
         local uint magic = ReadUInt();
         ubyte skip <hidden=true>;
-    } Header;
+    } Header<bgcolor=0xAAABBB>;
     FSkip(-1);
 }
     #include "TagsCollection.bt"
@@ -4127,7 +4127,7 @@ typedef struct {
     } else {
         StringRead path(-1, startof(RSZHeader), 0); 
     }
-} RSZUserDataInfo <name=ReadRSZUserDataInfoName, read=ReadRSZUserDataInfo>;
+} RSZUserDataInfo <name=ReadRSZUserDataInfoName, read=ReadRSZUserDataInfo, bgcolor=0xAAABBB>;
 
     string ReadRSZUserDataInfoName(RSZUserDataInfo &u) { 
         local string s; 
@@ -4322,7 +4322,7 @@ typedef struct {
         local uint AbsoluteDataOffs <hidden=true> = dataOffset + startof(this);
         if (startof(this) != startof(parentof(this)))
             local uint TotalSize;
-    } RSZHEADER <name="RSZHeader">;
+    } RSZHEADER <name="RSZHeader", bgcolor=0xAAABBB>;
 
     if (!ShowChildRSZs && exists(parentof(this)) && !exists(offset))
         struct RSZHEADER RSZHeader <hidden=true>;
@@ -4376,7 +4376,7 @@ typedef struct {
                 for (i=0; i<RSZHeader.userdataCount; i++)
                     RSZUserDataInfo userDataInfo;
             }
-        } RSZUSERDATAINFOS <name="RSZUserDataInfos">;
+        } RSZUSERDATAINFOS <name="RSZUserDataInfos", bgcolor=0xAAABBB>;
         
         if (!ShowChildRSZs && (exists(parentof(this)) && !exists(offset)))
             struct RSZUSERDATAINFOS RSZUserDataInfos <hidden=true>;
@@ -4534,7 +4534,7 @@ typedef struct {
     FSeek(startof(Data)+sizeof(Data));
     if (exists(this.RSZHeader.TotalSize))
         this.RSZHeader.TotalSize = FTell()-startof(RSZHeader);
-} RSZMagic <name="RSZ", name=ReadRSZMagicName, read=ReadRSZMagic>;
+} RSZMagic <name="RSZ", name=ReadRSZMagicName, read=ReadRSZMagic, bgcolor=0xAAABBB>;
     
     wstring ReadRSZMagicName(RSZMagic &m) { 
         if (exists(m.ObjectTable) && m.ObjectTable[0] >= 0 && exists(m.InstanceInfos.instanceInfo[m.ObjectTable[0]].typeId.HashName)) {
