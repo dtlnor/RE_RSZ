@@ -132,7 +132,7 @@ ParseJson(JsonPath);
 //===========================
 //Create your own enums here:
 //They will be added inside the struct for any variable with the name detected by findS()
-#include "enum.bt"
+#include "motfsmEnum.bt"
 
 //============================
 //Special functions & structs:
@@ -1051,6 +1051,8 @@ typedef struct(uint32 classHash, ubyte fieldIndex) {
     local ushort elementSize <hidden=true> = GetFieldSize(classHash, fieldIndex);
     local ubyte align <hidden=true> = GetFieldAlignment(classHash, fieldIndex);
     local ubyte isList <hidden=true> = GetFieldArrayState(classHash, fieldIndex);
+	local string fieldOrgTypeName <hidden=true> = GetFieldOrgTypeName(classHash, fieldIndex);
+
     local ushort lvl <hidden=true>;
     if (exists(parentof(this).lvl)) 
         lvl = parentof(this).lvl;
