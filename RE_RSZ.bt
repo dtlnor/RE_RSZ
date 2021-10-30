@@ -4745,17 +4745,18 @@ typedef struct(BHVTlvl lv, ubyte isList) {
 		            case id_expressionTreeConditions: lv = id_staticExpressionTreeConditions; break;
 		            default: break;
                 }
-            } 
-        } else {
-            int id;
-	        switch (lv) {
-		        case id_staticActions: lv = id_Actions; break;
-		        case id_staticSelectorCallers: lv = id_SelectorCallers; break;
-		        case id_staticConditions: lv = id_Conditions; break;
-		        case id_staticTransitionEvents: lv = id_transitionEvents; break;
-		        case id_staticExpressionTreeConditions: lv = id_expressionTreeConditions; break;
-		        default: break;
+            } else {
+	            switch (lv) {
+		            case id_staticActions: lv = id_Actions; break;
+		            case id_staticSelectorCallers: lv = id_SelectorCallers; break;
+		            case id_staticConditions: lv = id_Conditions; break;
+		            case id_staticTransitionEvents: lv = id_transitionEvents; break;
+		            case id_staticExpressionTreeConditions: lv = id_expressionTreeConditions; break;
+		            default: break;
+                }
             }
+        } else { //when 0xFFFFFFFF
+            int id;
         }
 
         
