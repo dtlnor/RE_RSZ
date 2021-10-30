@@ -11,8 +11,8 @@
 //   History: 
 //------------------------------------------------
 void enums(){
+    FSkip(-4);
     if (fieldName == "GroupName_Role") {
-        FSkip(-sizeof(data));
         enum {
             role_Normal =  0,
             role_Idle =  1,
@@ -33,7 +33,6 @@ void enums(){
         }GroupName_Role;
     }
     else if (findS(fieldOrgTypeName, "snow.player.fsm.FsmCommandBase.CommandFsm") != -1) {
-        FSkip(-sizeof(data));
         enum { 
             CommandFsm_None = 0,
             CommandFsm_AtkA = 1,
@@ -234,7 +233,6 @@ void enums(){
         } CmdType;
     }    
     else if (findS(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandBase.CommandConditionCommon") != -1) {
-        FSkip(-sizeof(data));
         enum { 
             CommandConditionCommon_None = 0,
             CommandConditionCommon_CmnStaminaEnoughEscape = 1,
@@ -251,7 +249,6 @@ void enums(){
         } _ConditionCommonEnum;
     }
     else if (findS(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2ConditionStick.Command") != -1) {
-        FSkip(-sizeof(data));
         enum { 
             Command_NONE = 0,
             Command_DASH = 1,
@@ -318,7 +315,6 @@ void enums(){
         } CmdType;
     }
     else if (findS(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2ConditionSuccessCommandStick.StickInput") != -1) {
-        FSkip(-sizeof(data));
         enum { 
             StickInput_None = 0,
             StickInput_AxislLRF3WayRight = 1,
@@ -332,7 +328,6 @@ void enums(){
         } _stickInputType;
     }
     else if (findS(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2ConditionSuccessCommandStick.Command") != -1) {
-        FSkip(-sizeof(data));
         enum { 
             Command_Invalid = 0,
             Command_Escape = 1,
@@ -344,13 +339,11 @@ void enums(){
         } _command;
     }
     else if (findS(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandShortSword.CommandConditionWp") != -1) {
-        FSkip(-sizeof(data));
         enum { 
             PlayerFsm2CommandShortSword_CommandConditionWp_WpNone = 0,
         } _ConditionWpEnum;
     }
     else if (findS(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandDogRide.CommandConditionWp") != -1) {
-        FSkip(-sizeof(data));
         enum { 
             PlayerFsm2CommandDogRide_CommandConditionWp_WpNone = 0,
             PlayerFsm2CommandDogRide_CommandConditionWp_StepClimbSS = 1,
@@ -374,7 +367,6 @@ void enums(){
         } _ConditionWpEnum;
     }
     else if (findS(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandDualBlades.CommandConditionWp") != -1) {
-        FSkip(-sizeof(data));
         enum { 
             PlayerFsm2CommandDualBlades_CommandConditionWp_WpNone = 0,
             PlayerFsm2CommandDualBlades_CommandConditionWp_KijinKyouka = 1,
@@ -382,7 +374,6 @@ void enums(){
         } _ConditionWpEnum;
     }
     else if (findS(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandInsectGlaive.CommandConditionWp") != -1) {
-        FSkip(-sizeof(data));
         enum { 
             PlayerFsm2CommandInsectGlaive_CommandConditionWp_WpNone = 0,
             PlayerFsm2CommandInsectGlaive_CommandConditionWp_IsReplaceAttackC = 1,
@@ -393,14 +384,12 @@ void enums(){
         } _ConditionWpEnum;
     }
     else if (findS(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandChargeAxe.CommandConditionWp") != -1) {
-        FSkip(-sizeof(data));
         enum { 
             PlayerFsm2CommandChargeAxe_CommandConditionWp_WpNone = 0,
             PlayerFsm2CommandChargeAxe_CommandConditionWp_ShieldBuff = 1,
         } _ConditionWpEnum;
     }
     else if (findS(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandSlashAxe.CommandConditionWp") != -1) {
-        FSkip(-sizeof(data));
         enum { 
             PlayerFsm2CommandSlashAxe_CommandConditionWp_WpNone = 0,
             PlayerFsm2CommandSlashAxe_CommandConditionWp_BottleEmpty = 1,
@@ -417,13 +406,11 @@ void enums(){
         } _ConditionWpEnum;
     }
     else if (findS(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandHammer.CommandConditionWp") != -1) {
-        FSkip(-sizeof(data));
         enum { 
             PlayerFsm2CommandHammer_CommandConditionWp_WpNone = 0,
         } _ConditionWpEnum;
     }
     else if (findS(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandGunLance.CommandConditionWp") != -1) {
-        FSkip(-sizeof(data));
         enum { 
             PlayerFsm2CommandGunLance_CommandConditionWp_WpNone = 0,
             PlayerFsm2CommandGunLance_CommandConditionWp_UpperSlash = 1,
@@ -439,14 +426,12 @@ void enums(){
         } _ConditionWpEnum;
     }
     else if (findS(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandLobby.CommandConditionWp") != -1) {
-        FSkip(-sizeof(data));
         enum { 
             PlayerFsm2CommandLobby_CommandConditionWp_WpNone = 0,
             PlayerFsm2CommandLobby_CommandConditionWp_OwlEnableFly = 1,
         } _ConditionWpEnum;
     }
     else if (findS(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandHeavyBowgun.CommandConditionWp") != -1) {
-        FSkip(-sizeof(data));
         enum { 
             PlayerFsm2CommandHeavyBowgun_CommandConditionWp_WpNone = 0,
             PlayerFsm2CommandHeavyBowgun_CommandConditionWp_ReloadOk = 1,
@@ -458,7 +443,6 @@ void enums(){
         } _ConditionWpEnum;
     }
     else if (findS(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandLongSword.CommandConditionWp") != -1) {
-        FSkip(-sizeof(data));
         enum { 
             PlayerFsm2CommandLongSword_CommandConditionWp_WpNone = 0,
             PlayerFsm2CommandLongSword_CommandConditionWp_GaugeCheck = 1,
@@ -466,7 +450,6 @@ void enums(){
         } _ConditionWpEnum;
     }
     else if (findS(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandLightBowgun.CommandConditionWp") != -1) {
-        FSkip(-sizeof(data));
         enum { 
             PlayerFsm2CommandLightBowgun_CommandConditionWp_WpNone = 0,
             PlayerFsm2CommandLightBowgun_CommandConditionWp_ReloadOk = 1,
@@ -476,14 +459,12 @@ void enums(){
         } _ConditionWpEnum;
     }
     else if (findS(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandBow.CommandConditionWp") != -1) {
-        FSkip(-sizeof(data));
         enum { 
             PlayerFsm2CommandBow_CommandConditionWp_WpNone = 0,
             PlayerFsm2CommandBow_CommandConditionWp_IsReplaceAttackC_WireCheck = 1,
         } _ConditionWpEnum;
     }
     else if (findS(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandHorn.CommandConditionWp") != -1) {
-        FSkip(-sizeof(data));
         enum { 
             PlayerFsm2CommandHorn_CommandConditionWp_WpNone = 0,
             PlayerFsm2CommandHorn_CommandConditionWp_MusicOk = 1,
@@ -491,26 +472,22 @@ void enums(){
         } _ConditionWpEnum;
     }
     else if (findS(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandGreatSword.CommandConditionWp") != -1) {
-        FSkip(-sizeof(data));
         enum { 
             PlayerFsm2CommandGreatSword_CommandConditionWp_WpNone = 0,
             PlayerFsm2CommandGreatSword_CommandConditionWp_WireUpGauge = 1,
         } _ConditionWpEnum;
     }
     else if (findS(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandLance.CommandConditionWp") != -1) {
-        FSkip(-sizeof(data));
         enum { 
             PlayerFsm2CommandLance_CommandConditionWp_WpNone = 0,
         } _ConditionWpEnum;
     }
     else if (findS(fieldOrgTypeName, "snow.player.fsm.FsmCommandChargeAxe.CommandFsmWp") != -1) {
-        FSkip(-sizeof(data));
         enum { 
             FsmCommandChargeAxe_CommandFsmWp_WpNone = 0,
         } _commandWpEnum;
     }
     else if (findS(fieldOrgTypeName, "snow.player.fsm.FsmCommandHeavyBowgun.CommandFsmWp") != -1) {
-        FSkip(-sizeof(data));
         enum {  
             FsmCommandHeavyBowgun_CommandFsmWp_WpNone = 0,
             FsmCommandHeavyBowgun_CommandFsmWp_ShotTrigger = 1,
@@ -530,7 +507,6 @@ void enums(){
         } _commandWpEnum;
     }
     else if (findS(fieldOrgTypeName, "snow.player.fsm.FsmCommandInsectGlaive.CommandFsmWp") != -1) {
-        FSkip(-sizeof(data));
         enum { 
             FsmCommandInsectGlaive_CommandFsmWp_WpNone = 0,
             FsmCommandInsectGlaive_CommandFsmWp_OnWall = 1,
@@ -539,7 +515,6 @@ void enums(){
         } _commandWpEnum;
     }
     else if (findS(fieldOrgTypeName, "snow.player.fsm.FsmCommandShortSword.CommandFsmWp") != -1) {
-        FSkip(-sizeof(data));
         enum { 
             FsmCommandShortSword_CommandFsmWp_WpNone = 0,
             FsmCommandShortSword_CommandFsmWp_NoChargeA = 1,
@@ -550,13 +525,11 @@ void enums(){
         } _commandWpEnum;
     }
     else if (findS(fieldOrgTypeName, "snow.player.fsm.FsmCommandHammer.CommandFsmWp") != -1) {
-        FSkip(-sizeof(data));
         enum { 
             FsmCommandHammer_CommandFsmWp_WpNone = 0,
         } _commandWpEnum;
     }
     else if (findS(fieldOrgTypeName, "snow.player.fsm.FsmCommandLobby.CommandFsmWp") != -1) {
-        FSkip(-sizeof(data));
         enum { 
            FsmCommandLobby_CommandFsmWp_WpNone = 0,
            FsmCommandLobby_CommandFsmWp_LobbyRideStart = 1,
@@ -564,13 +537,11 @@ void enums(){
         } _commandWpEnum;
     }
     else if (findS(fieldOrgTypeName, "snow.player.fsm.FsmCommandDogRide.CommandFsmWp") != -1) {
-        FSkip(-sizeof(data));
         enum { 
            FsmCommandDogRide_CommandFsmWp_WpNone = 0,
         } _commandWpEnum;
     }
     else if (findS(fieldOrgTypeName, "snow.player.fsm.FsmCommandLightBowgun.CommandFsmWp") != -1) {
-        FSkip(-sizeof(data));
         enum { 
             FsmCommandLightBowgun_CommandFsmWp_WpNone = 0,
             FsmCommandLightBowgun_CommandFsmWp_ShotTrigger = 1,
@@ -581,27 +552,23 @@ void enums(){
         } _commandWpEnum;
     }
     else if (findS(fieldOrgTypeName, "snow.player.fsm.FsmCommandHorn.CommandFsmWp") != -1) {
-        FSkip(-sizeof(data));
         enum { 
             FsmCommandHorn_CommandFsmWp_WpNone = 0,
             FsmCommandHorn_CommandFsmWp_Music = 1,
         } _commandWpEnum;
     }
     else if (findS(fieldOrgTypeName, "snow.player.fsm.FsmCommandGunLance.CommandFsmWp") != -1) {
-        FSkip(-sizeof(data));
         enum { 
             FsmCommandGunLance_CommandFsmWp_WpNone = 0,
             FsmCommandGunLance_CommandFsmWp_DragonSlayCannon = 1,
         } _commandWpEnum;
     }
     else if (findS(fieldOrgTypeName, "snow.player.fsm.FsmCommandLongSword.CommandFsmWp") != -1) {
-        FSkip(-sizeof(data));
         enum { 
             FsmCommandLongSword_CommandFsmWp_WpNone = 0,
         } _commandWpEnum;
     }
     else if (findS(fieldOrgTypeName, "snow.player.fsm.FsmCommandSlashAxe.CommandFsmWp") != -1) {
-        FSkip(-sizeof(data));
         enum { 
             FsmCommandSlashAxe_CommandFsmWp_WpNone = 0,
             FsmCommandSlashAxe_CommandFsmWp_SwingLoopToFinish = 1,
@@ -609,7 +576,6 @@ void enums(){
         } _commandWpEnum;
     }
     else if (findS(fieldOrgTypeName, "snow.player.fsm.FsmCommandBow.CommandFsmWp") != -1) {
-        FSkip(-sizeof(data));
         enum { 
             FsmCommandBow_CommandFsmWp_WpNone = 0,
             FsmCommandBow_CommandFsmWp_ReadyBowEscape = 1,
@@ -627,13 +593,11 @@ void enums(){
         } _commandWpEnum;
     }
     else if (findS(fieldOrgTypeName, "snow.player.fsm.FsmCommandGreatSword.CommandFsmWp") != -1) {
-        FSkip(-sizeof(data));
         enum { 
             FsmCommandGreatSword_CommandFsmWp_WpNone = 0,
         } _commandWpEnum;
     }
     else if (findS(fieldOrgTypeName, "snow.player.fsm.FsmCommandLance.CommandFsmWp") != -1) {
-        FSkip(-sizeof(data));
         enum { 
             FsmCommandLance_CommandFsmWp_WpNone = 0,
             FsmCommandLance_CommandFsmWp_PowerGuard = 1,
@@ -645,9 +609,9 @@ void enums(){
         } _commandWpEnum;
     }
     else if (findS(fieldOrgTypeName, "snow.player.fsm.FsmCommandDualBlades.CommandFsmWp") != -1) {
-        FSkip(-sizeof(data));
         enum { 
             FsmCommandDualBlades_CommandFsmWp_WpNone = 0,
         } _commandWpEnum;
-    }
+    } else
+		FSkip(4);
 }
