@@ -26,7 +26,7 @@ local int       HideRawData      <hidden=true>        = FALSE;                  
 local int       HideRawNodes     <hidden=true>        = FALSE;                     //Hides RawNodes struct
 local int       SortRequestSets  <hidden=true>        = TRUE;                      //Sorts RCOL RequestSets by their IDs
 local int       ExposeUserDatas  <hidden=true>        = TRUE;                      //Makes RSZFiles that contain embedded userDatas start after the Userdatas, for ctrl+J
-local int       ShowEnum         <hidden=true>        = FALSE;                     //Show enum to increase readibility
+local int       ShowEnum         <hidden=true>        = TRUE;                     //Show enum to increase readibility
 
 //Path to Noesis.exe
 local wstring NoesisPath <hidden=true> =            "C:\\MyProgram\\RETool\\noesisv4456\\Noesis.exe";
