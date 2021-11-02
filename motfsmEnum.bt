@@ -12,593 +12,645 @@
 //------------------------------------------------
 void enums(){
     FSkip(-4);
-	if (Strncmp(fieldOrgTypeName, "snow", 4) == 0){
-		if (Strncmp(fieldOrgTypeName, "snow.player.fsm", 15) == 0){
-			if (Strcmp(fieldOrgTypeName, "snow.player.fsm.FsmCommandBase.CommandFsm") == 0) {
-				enum { 
-					CommandFsm_None = 0,
-					CommandFsm_AtkA = 1,
-					CommandFsm_AtkX = 2,
-					CommandFsm_AtkXorA = 3,
-					CommandFsm_AtkXA = 4,
-					CommandFsm_AtkAR1 = 5,
-					CommandFsm_AtkXR1 = 6,
-					CommandFsm_AtkXAR1 = 7,
-					CommandFsm_AtkR1 = 8,
-					CommandFsm_AtkR2 = 9,
-					CommandFsm_AtkR2On = 10,
-					CommandFsm_AtkR2Off = 11,
-					CommandFsm_AtkR1Release = 12,
-					CommandFsm_AtkR2Release = 13,
-					CommandFsm_AtkAOn = 14,
-					CommandFsm_AtkXOn = 15,
-					CommandFsm_AtkXAOn = 16,
-					CommandFsm_AtkAOff = 17,
-					CommandFsm_AtkXOff = 18,
-					CommandFsm_AtkARelease = 19,
-					CommandFsm_AtkXRelease = 20,
-					CommandFsm_WpStart = 21,
-					CommandFsm_WpStartXAR = 22,
-					CommandFsm_WpEnd = 23,
-					CommandFsm_Escape = 24,
-					CommandFsm_EscapeR = 25,
-					CommandFsm_EscapeL = 26,
-					CommandFsm_EscapeF = 27,
-					CommandFsm_EscapeB = 28,
-					CommandFsm_EscapeAnalogl = 29,
-					CommandFsm_Dash = 30,
-					CommandFsm_Guard = 31,
-					CommandFsm_Sit = 32,
-					CommandFsm_Ride = 33,
-					CommandFsm_Tsuta = 34,
-					CommandFsm_TsutaEnd = 35,
-					CommandFsm_TsutaDash = 36,
-					CommandFsm_WireUp = 37,
-					CommandFsm_WireFront = 38,
-					CommandFsm_WireTarget = 39,
-					CommandFsm_WireStopEnd = 40,
-					CommandFsm_WireEscape = 41,
-					CommandFsm_WireUpGunner = 42,
-					CommandFsm_WireFrontGunner = 43,
-					CommandFsm_PopAction = 44,
-					CommandFsm_GimmickPopAction = 45,
-					CommandFsm_GimmickCancel = 46,
-					CommandFsm_NpcFacilityPopAction = 47,
-					CommandFsm_LongJump = 48,
-					CommandFsm_EnvCreaturePopAction = 49,
-					CommandFsm_ItemPopAction = 50,
-					CommandFsm_AtkR1Delay = 51,
-					CommandFsm_AtkAwithoutR1 = 52,
-					CommandFsm_AtkXwithoutR1 = 53,
-					CommandFsm_AtkXAwithoutR1 = 54,
-					CommandFsm_AtkAwithoutX = 55,
-					CommandFsm_AtkXwithoutA = 56,
-					CommandFsm_AtkAwithoutXandR1 = 57,
-					CommandFsm_AtkXwithoutAandR1 = 58,
-					CommandFsm_AtkAxislRightX = 59,
-					CommandFsm_AtkAxislLeftX = 60,
-					CommandFsm_AtkAxislFrontX = 61,
-					CommandFsm_AtkAxislBackX = 62,
-					CommandFsm_AtkAxislFrontOrNeutralX = 63,
-					CommandFsm_AtkAxislLRF3WayRightX = 64,
-					CommandFsm_AtkAxislLRF3WayLeftX = 65,
-					CommandFsm_AtkAxislLRF3WayFrontX = 66,
-					CommandFsm_AtkAxislLRB3WayRightX = 67,
-					CommandFsm_AtkAxislLRB3WayLeftX = 68,
-					CommandFsm_AtkAxislLRB3WayBackX = 69,
-					CommandFsm_AtkAxislFB2WayFrontX = 70,
-					CommandFsm_AtkAxislFB2WayBackX = 71,
-					CommandFsm_AtkAxislLR2WayRightX = 72,
-					CommandFsm_AtkAxislLR2WayLeftX = 73,
-					CommandFsm_AtkAnaloglUpX = 74,
-					CommandFsm_AtkAnaloglDownX = 75,
-					CommandFsm_AtkAnaloglLeftX = 76,
-					CommandFsm_AtkAnaloglRightX = 77,
-					CommandFsm_AtkAxislRightA = 78,
-					CommandFsm_AtkAxislLeftA = 79,
-					CommandFsm_AtkAxislFrontA = 80,
-					CommandFsm_AtkAxislBackA = 81,
-					CommandFsm_AtkAxislLRF3WayRightA = 82,
-					CommandFsm_AtkAxislLRF3WayLeftA = 83,
-					CommandFsm_AtkAxislLRF3WayFrontA = 84,
-					CommandFsm_AtkAxislLRB3WayRightA = 85,
-					CommandFsm_AtkAxislLRB3WayLeftA = 86,
-					CommandFsm_AtkAxislLRB3WayBackA = 87,
-					CommandFsm_AtkAxislFB2WayFrontA = 88,
-					CommandFsm_AtkAxislFB2WayFrontOrNeutralA = 89,
-					CommandFsm_AtkAxislFB2WayBackA = 90,
-					CommandFsm_AtkAxislLR2WayRightA = 91,
-					CommandFsm_AtkAxislLR2WayLeftA = 92,
-					CommandFsm_AtkAnaloglUpA = 93,
-					CommandFsm_AtkAnaloglDownA = 94,
-					CommandFsm_AtkAnaloglLeftA = 95,
-					CommandFsm_AtkAnaloglRightA = 96,
-					CommandFsm_AtkAxislRightXA = 97,
-					CommandFsm_AtkAxislLeftXA = 98,
-					CommandFsm_AtkAxislFrontXA = 99,
-					CommandFsm_AtkAxislBackXA = 100,
-					CommandFsm_AtkAxislLRF3WayRightXA = 101,
-					CommandFsm_AtkAxislLRF3WayLeftXA = 102,
-					CommandFsm_AtkAxislLRF3WayFrontXA = 103,
-					CommandFsm_AtkAxislLRB3WayRightXA = 104,
-					CommandFsm_AtkAxislLRB3WayLeftXA = 105,
-					CommandFsm_AtkAxislLRB3WayBackXA = 106,
-					CommandFsm_AtkAxislFB2WayFrontXA = 107,
-					CommandFsm_AtkAxislFB2WayBackXA = 108,
-					CommandFsm_AtkAxislLR2WayRightXA = 109,
-					CommandFsm_AtkAxislLR2WayLeftXA = 110,
-					CommandFsm_AtkAnaloglUpXA = 111,
-					CommandFsm_AtkAnaloglDownXA = 112,
-					CommandFsm_AtkAnaloglLeftXA = 113,
-					CommandFsm_AtkAnaloglRightXA = 114,
-					CommandFsm_AtkAxislRightR1 = 115,
-					CommandFsm_AtkAxislLeftR1 = 116,
-					CommandFsm_AtkAxislFrontR1 = 117,
-					CommandFsm_AtkAxislBackR1 = 118,
-					CommandFsm_AtkAxislLRF3WayRightR1 = 119,
-					CommandFsm_AtkAxislLRF3WayLeftR1 = 120,
-					CommandFsm_AtkAxislLRF3WayFrontR1 = 121,
-					CommandFsm_AtkAxislLRB3WayRightR1 = 122,
-					CommandFsm_AtkAxislLRB3WayLeftR1 = 123,
-					CommandFsm_AtkAxislLRB3WayBackR1 = 124,
-					CommandFsm_AtkAxislFB2WayFrontR1 = 125,
-					CommandFsm_AtkAxislFB2WayBackR1 = 126,
-					CommandFsm_AtkAxislLR2WayRightR1 = 127,
-					CommandFsm_AtkAxislLR2WayLeftR1 = 128,
-					CommandFsm_AtkAnaloglUpR1 = 129,
-					CommandFsm_AtkAnaloglDownR1 = 130,
-					CommandFsm_AtkAnaloglLeftR1 = 131,
-					CommandFsm_AtkAnaloglRightR1 = 132,
-					CommandFsm_AtkAxislRightXR1 = 133,
-					CommandFsm_AtkAxislLeftXR1 = 134,
-					CommandFsm_AtkAxislFrontXR1 = 135,
-					CommandFsm_AtkAxislBackXR1 = 136,
-					CommandFsm_AtkAnaloglXA = 137,
-					CommandFsm_AtkAnaloglA = 138,
-					CommandFsm_AtkAnaloglX = 139,
-					CommandFsm_AtkAnaloglR1 = 140,
-					CommandFsm_AtkNeutralXA = 141,
-					CommandFsm_AtkNeutralA = 142,
-					CommandFsm_AtkNeutralX = 143,
-					CommandFsm_AtkNeutralR1 = 144,
-					CommandFsm_ItemY = 145,
-					CommandFsm_ItemYOn = 146,
-					CommandFsm_ItemYOff = 147,
-					CommandFsm_KunaiAimZLOn = 148,
-					CommandFsm_RideDriftOn = 149,
-					CommandFsm_RideDriftOff = 150,
-					CommandFsm_RideJump = 151,
-					CommandFsm_SlidingJump = 152,
-					CommandFsm_Marionette = 153,
-					CommandFsm_OtomoPopAction = 154,
-					CommandFsm_AtkRB = 155,
-					CommandFsm_HagitoriPopAction = 156,
-					CommandFsm_TrapRemovePopAction = 157,
-					CommandFsm_LongJumpPointRelease = 158,
-					CommandFsm_Fishing = 159,
-					CommandFsm_DropEnvCreature = 160,
-					CommandFsm_AnyTrigger = 161,
-					CommandFsm_OtomoCommunicationStart = 162,
-					CommandFsm_OtomoCommunicationA = 163,
-					CommandFsm_OtomoCommunicationB = 164,
-					CommandFsm_OtomoCommunicationX = 165,
-					CommandFsm_OtomoCommunicationY = 166,
-					CommandFsm_AtkR1ZR = 167,
-					CommandFsm_AtkR1Off = 168,
-					CommandFsm_LobbyWireUp = 169,
-					CommandFsm_LobbyWireFront = 170,
-					CommandFsm_LobbyWireTarget = 171,
-					CommandFsm_Decide = 172,
-					CommandFsm_Cancel = 173,
-					CommandFsm_AtkR1On = 174,
-					CommandFsm_Gimmick_Hold = 175,
-					CommandFsm_Gimmick_HoldCancel = 176,
-					CommandFsm_ActionStart = 177,
-					CommandFsm_ActionEnd = 178,
-					CommandFsm_ItemTake = 179,
-					CommandFsm_AtkXAR1_ZR = 180,
-					CommandFsm_AtkXAorR1 = 181,
-					CommandFsm_GimmickShotTrg_AorZR = 182,
-					CommandFsm_GimmickShotTrg_X = 183,
-					CommandFsm_GimmickShotTrg_Y = 184,
-					CommandFsm_GimmickShotOn_AorZR = 185,
-					CommandFsm_GimmickShotOn_X = 186,
-					CommandFsm_GimmickShotOn_Y = 187,
-					CommandFsm_AtkXAorR1Trg = 188,
-					CommandFsm_GuardTrg = 189,
-					CommandFsm_AtkZRZL = 190,
-					CommandFsm_AtkXOnOriginal = 191,
-					CommandFsm_AtkAOnOriginal = 192,
-					CommandFsm_PopActionOn = 193,
-					CommandFsm_ActionB = 194,
-					CommandFsm_CancelNoDelay = 195,
-				} CmdType;
-			}    
-			else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandBase.CommandConditionCommon") == 0) {
-				enum { 
-					CommandConditionCommon_None = 0,
-					CommandConditionCommon_CmnStaminaEnoughEscape = 1,
-					CommandConditionCommon_CmnHunterWireNotEmpty = 2,
-					CommandConditionCommon_CmnHunterWireOverTwo = 3,
-					CommandConditionCommon_CmnHunterWireNotEmptyStaminaEnoughEscape = 4,
-					CommandConditionCommon_CmnBowgunRecoilMotionSpeedTypeFlyNotNone = 5,
-					CommandConditionCommon_CmnPlayerStateIsStand = 6,
-					CommandConditionCommon_CmnBallistaTutorial_Hold = 7,
-					CommandConditionCommon_CmnBallistaTutorial_Cancel = 8,
-					CommandConditionCommon_CmnHunterWireEmptyAndIsStand = 9,
-					CommandConditionCommon_CmnHunterWireNotEmptyOrEmptyStand = 10,
-					CommandConditionCommon_CmnOnGround = 11,
-				} _ConditionCommonEnum;
+	if (Strncmp(fieldOrgTypeName, "snow.player", 4) == 0){
+	    if (Strncmp(fieldOrgTypeName, "snow.player.fsm", 15) == 0){
+			if (Strcmp(fieldName, "_commandWpEnum") == 0){
+				if (Strcmp(fieldOrgTypeName, "snow.player.fsm.FsmCommandChargeAxe.CommandFsmWp") == 0) {
+					enum { 
+						FsmCommandChargeAxe_CommandFsmWp_WpNone = 0,
+					} _commandWpEnum;
+				}
+				else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.FsmCommandHeavyBowgun.CommandFsmWp") == 0) {
+					enum {  
+						FsmCommandHeavyBowgun_CommandFsmWp_WpNone = 0,
+						FsmCommandHeavyBowgun_CommandFsmWp_ShotTrigger = 1,
+						FsmCommandHeavyBowgun_CommandFsmWp_ShotOn = 2,
+						FsmCommandHeavyBowgun_CommandFsmWp_ShotOnWithoutStrike = 3,
+						FsmCommandHeavyBowgun_CommandFsmWp_ShotOff = 4,
+						FsmCommandHeavyBowgun_CommandFsmWp_SpecialBullet = 5,
+						FsmCommandHeavyBowgun_CommandFsmWp_Reload = 6,
+						FsmCommandHeavyBowgun_CommandFsmWp_ReloadWithoutA = 7,
+						FsmCommandHeavyBowgun_CommandFsmWp_Strike = 8,
+						FsmCommandHeavyBowgun_CommandFsmWp_FlyAtkX = 9,
+						FsmCommandHeavyBowgun_CommandFsmWp_ShotOnDelay = 10,
+						FsmCommandHeavyBowgun_CommandFsmWp_ShotTriggerFly = 11,
+						FsmCommandHeavyBowgun_CommandFsmWp_ShotOnFly = 12,
+						FsmCommandHeavyBowgun_CommandFsmWp_WireUpReadyHeavy = 13,
+						FsmCommandHeavyBowgun_CommandFsmWp_WireFrontReadyHeavy = 14,
+					} _commandWpEnum;
+				}
+				else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.FsmCommandInsectGlaive.CommandFsmWp") == 0) {
+					enum { 
+						FsmCommandInsectGlaive_CommandFsmWp_WpNone = 0,
+						FsmCommandInsectGlaive_CommandFsmWp_OnWall = 1,
+						FsmCommandInsectGlaive_CommandFsmWp_OnWallToRun = 2,
+						FsmCommandInsectGlaive_CommandFsmWp_MarkingShot = 3,
+					} _commandWpEnum;
+				}
+				else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.FsmCommandShortSword.CommandFsmWp") == 0) {
+					enum { 
+						FsmCommandShortSword_CommandFsmWp_WpNone = 0,
+						FsmCommandShortSword_CommandFsmWp_NoChargeA = 1,
+						FsmCommandShortSword_CommandFsmWp_ChargeA = 2,
+						FsmCommandShortSword_CommandFsmWp_UseItemWpOn = 3,
+						FsmCommandShortSword_CommandFsmWp_UseItemWpOnZButton = 4,
+						FsmCommandShortSword_CommandFsmWp_SS_WpEnd = 5,
+					} _commandWpEnum;
+				}
+				else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.FsmCommandHammer.CommandFsmWp") == 0) {
+					enum { 
+						FsmCommandHammer_CommandFsmWp_WpNone = 0,
+					} _commandWpEnum;
+				}
+				else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.FsmCommandLobby.CommandFsmWp") == 0) {
+					enum { 
+					   FsmCommandLobby_CommandFsmWp_WpNone = 0,
+					   FsmCommandLobby_CommandFsmWp_LobbyRideStart = 1,
+					   FsmCommandLobby_CommandFsmWp_LobbyRideEnd = 2,
+					} _commandWpEnum;
+				}
+				else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.FsmCommandDogRide.CommandFsmWp") == 0) {
+					enum { 
+					   FsmCommandDogRide_CommandFsmWp_WpNone = 0,
+					} _commandWpEnum;
+				}
+				else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.FsmCommandLightBowgun.CommandFsmWp") == 0) {
+					enum { 
+						FsmCommandLightBowgun_CommandFsmWp_WpNone = 0,
+						FsmCommandLightBowgun_CommandFsmWp_ShotTrigger = 1,
+						FsmCommandLightBowgun_CommandFsmWp_SpecialBullet = 2,
+						FsmCommandLightBowgun_CommandFsmWp_Reload = 3,
+						FsmCommandLightBowgun_CommandFsmWp_Strike = 4,
+						FsmCommandLightBowgun_CommandFsmWp_FlyAtkX = 5,
+					} _commandWpEnum;
+				}
+				else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.FsmCommandHorn.CommandFsmWp") == 0) {
+					enum { 
+						FsmCommandHorn_CommandFsmWp_WpNone = 0,
+						FsmCommandHorn_CommandFsmWp_Music = 1,
+					} _commandWpEnum;
+				}
+				else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.FsmCommandGunLance.CommandFsmWp") == 0) {
+					enum { 
+						FsmCommandGunLance_CommandFsmWp_WpNone = 0,
+						FsmCommandGunLance_CommandFsmWp_DragonSlayCannon = 1,
+					} _commandWpEnum;
+				}
+				else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.FsmCommandLongSword.CommandFsmWp") == 0) {
+					enum { 
+						FsmCommandLongSword_CommandFsmWp_WpNone = 0,
+					} _commandWpEnum;
+				}
+				else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.FsmCommandSlashAxe.CommandFsmWp") == 0) {
+					enum { 
+						FsmCommandSlashAxe_CommandFsmWp_WpNone = 0,
+						FsmCommandSlashAxe_CommandFsmWp_SwingLoopToFinish = 1,
+						FsmCommandSlashAxe_CommandFsmWp_SwingLoopToFront = 2,
+					} _commandWpEnum;
+				}
+				else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.FsmCommandBow.CommandFsmWp") == 0) {
+					enum { 
+						FsmCommandBow_CommandFsmWp_WpNone = 0,
+						FsmCommandBow_CommandFsmWp_ReadyBowEscape = 1,
+						FsmCommandBow_CommandFsmWp_ReadyShot = 2,
+						FsmCommandBow_CommandFsmWp_FireShot = 3,
+						FsmCommandBow_CommandFsmWp_FireShotTrigger = 4,
+						FsmCommandBow_CommandFsmWp_DragonShot = 5,
+						FsmCommandBow_CommandFsmWp_ChangeBottle = 6,
+						FsmCommandBow_CommandFsmWp_ComboArrowAtk = 7,
+						FsmCommandBow_CommandFsmWp_BowAtkA = 8,
+						FsmCommandBow_CommandFsmWp_BowAtkARelease = 9,
+						FsmCommandBow_CommandFsmWp_BowWireUpReadyBow = 10,
+						FsmCommandBow_CommandFsmWp_BowWireFrontReadyBow = 11,
+						FsmCommandBow_CommandFsmWp_ReadyHighAngleShoot = 12,
+					} _commandWpEnum;
+				}
+				else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.FsmCommandGreatSword.CommandFsmWp") == 0) {
+					enum { 
+						FsmCommandGreatSword_CommandFsmWp_WpNone = 0,
+					} _commandWpEnum;
+				}
+				else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.FsmCommandLance.CommandFsmWp") == 0) {
+					enum { 
+						FsmCommandLance_CommandFsmWp_WpNone = 0,
+						FsmCommandLance_CommandFsmWp_PowerGuard = 1,
+						FsmCommandLance_CommandFsmWp_AtkAxislBackB = 2,
+						FsmCommandLance_CommandFsmWp_AxislNeutralB = 3,
+						FsmCommandLance_CommandFsmWp_CancelPowerGuard = 4,
+						FsmCommandLance_CommandFsmWp_BlinkChainDeathMatch = 5,
+						FsmCommandLance_CommandFsmWp_GuardDash = 6,
+					} _commandWpEnum;
+				}
+				else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.FsmCommandDualBlades.CommandFsmWp") == 0) {
+					enum { 
+						FsmCommandDualBlades_CommandFsmWp_WpNone = 0,
+					} _commandWpEnum;
+				} else
+					FSkip(4); //not CommandFsmWp
+			} 
+			else if (Strcmp(fieldName, "_ConditionWpEnum") == 0){
+				if (Strcmp(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandShortSword.CommandConditionWp") == 0) {
+					enum { 
+						PlayerFsm2CommandShortSword_CommandConditionWp_WpNone = 0,
+					} _ConditionWpEnum;
+				}
+				else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandDogRide.CommandConditionWp") == 0) {
+					enum { 
+						PlayerFsm2CommandDogRide_CommandConditionWp_WpNone = 0,
+						PlayerFsm2CommandDogRide_CommandConditionWp_StepClimbSS = 1,
+						PlayerFsm2CommandDogRide_CommandConditionWp_StepClimbS = 2,
+						PlayerFsm2CommandDogRide_CommandConditionWp_StepClimbM = 3,
+						PlayerFsm2CommandDogRide_CommandConditionWp_StepClimbL = 4,
+						PlayerFsm2CommandDogRide_CommandConditionWp_StepClimbSSNoLever = 5,
+						PlayerFsm2CommandDogRide_CommandConditionWp_StepClimbSNoLever = 6,
+						PlayerFsm2CommandDogRide_CommandConditionWp_StepClimbMNoLever = 7,
+						PlayerFsm2CommandDogRide_CommandConditionWp_StepClimbLNoLever = 8,
+						PlayerFsm2CommandDogRide_CommandConditionWp_WallClimbStart = 9,
+						PlayerFsm2CommandDogRide_CommandConditionWp_WallClimbEndTop = 10,
+						PlayerFsm2CommandDogRide_CommandConditionWp_WallClimbEndBtm = 11,
+						PlayerFsm2CommandDogRide_CommandConditionWp_FrontStep = 12,
+						PlayerFsm2CommandDogRide_CommandConditionWp_SelfJumpClimbS = 13,
+						PlayerFsm2CommandDogRide_CommandConditionWp_SelfJumpClimbL = 14,
+						PlayerFsm2CommandDogRide_CommandConditionWp_SelfJumpWallKick = 15,
+						PlayerFsm2CommandDogRide_CommandConditionWp_SelfJumpTustaClimb = 16,
+						PlayerFsm2CommandDogRide_CommandConditionWp_LockOnEnemyExist = 17,
+						PlayerFsm2CommandDogRide_CommandConditionWp_RidingDogStand = 18,
+					} _ConditionWpEnum;
+				}
+				else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandDualBlades.CommandConditionWp") == 0) {
+					enum { 
+						PlayerFsm2CommandDualBlades_CommandConditionWp_WpNone = 0,
+						PlayerFsm2CommandDualBlades_CommandConditionWp_KijinKyouka = 1,
+						PlayerFsm2CommandDualBlades_CommandConditionWp_CmnHunterWireNotEmptyAndNotReplaceAttackTypeC = 2,
+					} _ConditionWpEnum;
+				}
+				else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandInsectGlaive.CommandConditionWp") == 0) {
+					enum { 
+						PlayerFsm2CommandInsectGlaive_CommandConditionWp_WpNone = 0,
+						PlayerFsm2CommandInsectGlaive_CommandConditionWp_IsReplaceAttackC = 1,
+						PlayerFsm2CommandInsectGlaive_CommandConditionWp_IsReplaceAttackCandWireNotEmpty = 2,
+						PlayerFsm2CommandInsectGlaive_CommandConditionWp_IsReplaceAttackCandWireOverTwo = 3,
+						PlayerFsm2CommandInsectGlaive_CommandConditionWp_IsInsectStateIsNotWait = 4,
+						PlayerFsm2CommandInsectGlaive_CommandConditionWp_IsAerialCountNoMax = 5,
+					} _ConditionWpEnum;
+				}
+				else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandChargeAxe.CommandConditionWp") == 0) {
+					enum { 
+						PlayerFsm2CommandChargeAxe_CommandConditionWp_WpNone = 0,
+						PlayerFsm2CommandChargeAxe_CommandConditionWp_ShieldBuff = 1,
+					} _ConditionWpEnum;
+				}
+				else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandSlashAxe.CommandConditionWp") == 0) {
+					enum { 
+						PlayerFsm2CommandSlashAxe_CommandConditionWp_WpNone = 0,
+						PlayerFsm2CommandSlashAxe_CommandConditionWp_BottleEmpty = 1,
+						PlayerFsm2CommandSlashAxe_CommandConditionWp_BottleNotEmpty = 2,
+						PlayerFsm2CommandSlashAxe_CommandConditionWp_BottleChangeable = 3,
+						PlayerFsm2CommandSlashAxe_CommandConditionWp_BottleNotChangeable = 4,
+						PlayerFsm2CommandSlashAxe_CommandConditionWp_BottleNotEmpty_ReplaceAttackTypeA = 5,
+						PlayerFsm2CommandSlashAxe_CommandConditionWp_BottleNotEmpty_ReplaceAttackTypeB = 6,
+						PlayerFsm2CommandSlashAxe_CommandConditionWp_BottleNotEmpty_ReplaceAttackTypeC = 7,
+						PlayerFsm2CommandSlashAxe_CommandConditionWp_BottleNotEmpty_NotReplaceAttackTypeA = 8,
+						PlayerFsm2CommandSlashAxe_CommandConditionWp_BottleNotEmpty_NotReplaceAttackTypeB = 9,
+						PlayerFsm2CommandSlashAxe_CommandConditionWp_BottleNotEmpty_NotReplaceAttackTypeC = 10,
+						PlayerFsm2CommandSlashAxe_CommandConditionWp_HunterWireNotEmpty_BottleNotEmpty_ReplaceAttackTypeC = 11,
+					} _ConditionWpEnum;
+				}
+				else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandHammer.CommandConditionWp") == 0) {
+					enum { 
+						PlayerFsm2CommandHammer_CommandConditionWp_WpNone = 0,
+					} _ConditionWpEnum;
+				}
+				else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandGunLance.CommandConditionWp") == 0) {
+					enum { 
+						PlayerFsm2CommandGunLance_CommandConditionWp_WpNone = 0,
+						PlayerFsm2CommandGunLance_CommandConditionWp_UpperSlash = 1,
+						PlayerFsm2CommandGunLance_CommandConditionWp_Blow = 2,
+						PlayerFsm2CommandGunLance_CommandConditionWp_SideSlash = 3,
+						PlayerFsm2CommandGunLance_CommandConditionWp_GuardStab = 4,
+						PlayerFsm2CommandGunLance_CommandConditionWp_CanReload = 5,
+						PlayerFsm2CommandGunLance_CommandConditionWp_Prohibit_AtkX = 6,
+						PlayerFsm2CommandGunLance_CommandConditionWp_CanShotSharpnessLv = 7,
+						PlayerFsm2CommandGunLance_CommandConditionWp_NoHitUpperSting = 8,
+						PlayerFsm2CommandGunLance_CommandConditionWp_IsNotReplaceAttackBandWireNotEmpty = 9,
+						PlayerFsm2CommandGunLance_CommandConditionWp_IsReplaceAttackBWireNotEmptyCheck = 10,
+					} _ConditionWpEnum;
+				}
+				else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandLobby.CommandConditionWp") == 0) {
+					enum { 
+						PlayerFsm2CommandLobby_CommandConditionWp_WpNone = 0,
+						PlayerFsm2CommandLobby_CommandConditionWp_OwlEnableFly = 1,
+					} _ConditionWpEnum;
+				}
+				else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandHeavyBowgun.CommandConditionWp") == 0) {
+					enum { 
+						PlayerFsm2CommandHeavyBowgun_CommandConditionWp_WpNone = 0,
+						PlayerFsm2CommandHeavyBowgun_CommandConditionWp_ReloadOk = 1,
+						PlayerFsm2CommandHeavyBowgun_CommandConditionWp_NormalBulletModeOnly = 2,
+						PlayerFsm2CommandHeavyBowgun_CommandConditionWp_WyvernSnipeBulletNotEmpty = 3,
+						PlayerFsm2CommandHeavyBowgun_CommandConditionWp_WireAnchor = 4,
+						PlayerFsm2CommandHeavyBowgun_CommandConditionWp_IsKakusan = 5,
+						PlayerFsm2CommandHeavyBowgun_CommandConditionWp_CanShot = 6,
+					} _ConditionWpEnum;
+				}
+				else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandLongSword.CommandConditionWp") == 0) {
+					enum { 
+						PlayerFsm2CommandLongSword_CommandConditionWp_WpNone = 0,
+						PlayerFsm2CommandLongSword_CommandConditionWp_GaugeCheck = 1,
+						PlayerFsm2CommandLongSword_CommandConditionWp_GaugeLvCheck = 2,
+					} _ConditionWpEnum;
+				}
+				else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandLightBowgun.CommandConditionWp") == 0) {
+					enum { 
+						PlayerFsm2CommandLightBowgun_CommandConditionWp_WpNone = 0,
+						PlayerFsm2CommandLightBowgun_CommandConditionWp_ReloadOk = 1,
+						PlayerFsm2CommandLightBowgun_CommandConditionWp_WyvernBlastOk = 2,
+						PlayerFsm2CommandLightBowgun_CommandConditionWp_IsKakusan = 3,
+						PlayerFsm2CommandLightBowgun_CommandConditionWp_CanShot = 4,
+					} _ConditionWpEnum;
+				}
+				else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandBow.CommandConditionWp") == 0) {
+					enum { 
+						PlayerFsm2CommandBow_CommandConditionWp_WpNone = 0,
+						PlayerFsm2CommandBow_CommandConditionWp_IsReplaceAttackC_WireCheck = 1,
+					} _ConditionWpEnum;
+				}
+				else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandHorn.CommandConditionWp") == 0) {
+					enum { 
+						PlayerFsm2CommandHorn_CommandConditionWp_WpNone = 0,
+						PlayerFsm2CommandHorn_CommandConditionWp_MusicOk = 1,
+						PlayerFsm2CommandHorn_CommandConditionWp_RevoltOk = 2,
+					} _ConditionWpEnum;
+				}
+				else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandGreatSword.CommandConditionWp") == 0) {
+					enum { 
+						PlayerFsm2CommandGreatSword_CommandConditionWp_WpNone = 0,
+						PlayerFsm2CommandGreatSword_CommandConditionWp_WireUpGauge = 1,
+					} _ConditionWpEnum;
+				}
+				else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandLance.CommandConditionWp") == 0) {
+					enum { 
+						PlayerFsm2CommandLance_CommandConditionWp_WpNone = 0,
+					} _ConditionWpEnum;
+				} else
+					FSkip(4); //not CommandConditionWp
+			} 
+			else {
+				if (Strcmp(fieldOrgTypeName, "snow.player.fsm.FsmCommandBase.CommandFsm") == 0) {
+					enum { 
+						CommandFsm_None = 0,
+						CommandFsm_AtkA = 1,
+						CommandFsm_AtkX = 2,
+						CommandFsm_AtkXorA = 3,
+						CommandFsm_AtkXA = 4,
+						CommandFsm_AtkAR1 = 5,
+						CommandFsm_AtkXR1 = 6,
+						CommandFsm_AtkXAR1 = 7,
+						CommandFsm_AtkR1 = 8,
+						CommandFsm_AtkR2 = 9,
+						CommandFsm_AtkR2On = 10,
+						CommandFsm_AtkR2Off = 11,
+						CommandFsm_AtkR1Release = 12,
+						CommandFsm_AtkR2Release = 13,
+						CommandFsm_AtkAOn = 14,
+						CommandFsm_AtkXOn = 15,
+						CommandFsm_AtkXAOn = 16,
+						CommandFsm_AtkAOff = 17,
+						CommandFsm_AtkXOff = 18,
+						CommandFsm_AtkARelease = 19,
+						CommandFsm_AtkXRelease = 20,
+						CommandFsm_WpStart = 21,
+						CommandFsm_WpStartXAR = 22,
+						CommandFsm_WpEnd = 23,
+						CommandFsm_Escape = 24,
+						CommandFsm_EscapeR = 25,
+						CommandFsm_EscapeL = 26,
+						CommandFsm_EscapeF = 27,
+						CommandFsm_EscapeB = 28,
+						CommandFsm_EscapeAnalogl = 29,
+						CommandFsm_Dash = 30,
+						CommandFsm_Guard = 31,
+						CommandFsm_Sit = 32,
+						CommandFsm_Ride = 33,
+						CommandFsm_Tsuta = 34,
+						CommandFsm_TsutaEnd = 35,
+						CommandFsm_TsutaDash = 36,
+						CommandFsm_WireUp = 37,
+						CommandFsm_WireFront = 38,
+						CommandFsm_WireTarget = 39,
+						CommandFsm_WireStopEnd = 40,
+						CommandFsm_WireEscape = 41,
+						CommandFsm_WireUpGunner = 42,
+						CommandFsm_WireFrontGunner = 43,
+						CommandFsm_PopAction = 44,
+						CommandFsm_GimmickPopAction = 45,
+						CommandFsm_GimmickCancel = 46,
+						CommandFsm_NpcFacilityPopAction = 47,
+						CommandFsm_LongJump = 48,
+						CommandFsm_EnvCreaturePopAction = 49,
+						CommandFsm_ItemPopAction = 50,
+						CommandFsm_AtkR1Delay = 51,
+						CommandFsm_AtkAwithoutR1 = 52,
+						CommandFsm_AtkXwithoutR1 = 53,
+						CommandFsm_AtkXAwithoutR1 = 54,
+						CommandFsm_AtkAwithoutX = 55,
+						CommandFsm_AtkXwithoutA = 56,
+						CommandFsm_AtkAwithoutXandR1 = 57,
+						CommandFsm_AtkXwithoutAandR1 = 58,
+						CommandFsm_AtkAxislRightX = 59,
+						CommandFsm_AtkAxislLeftX = 60,
+						CommandFsm_AtkAxislFrontX = 61,
+						CommandFsm_AtkAxislBackX = 62,
+						CommandFsm_AtkAxislFrontOrNeutralX = 63,
+						CommandFsm_AtkAxislLRF3WayRightX = 64,
+						CommandFsm_AtkAxislLRF3WayLeftX = 65,
+						CommandFsm_AtkAxislLRF3WayFrontX = 66,
+						CommandFsm_AtkAxislLRB3WayRightX = 67,
+						CommandFsm_AtkAxislLRB3WayLeftX = 68,
+						CommandFsm_AtkAxislLRB3WayBackX = 69,
+						CommandFsm_AtkAxislFB2WayFrontX = 70,
+						CommandFsm_AtkAxislFB2WayBackX = 71,
+						CommandFsm_AtkAxislLR2WayRightX = 72,
+						CommandFsm_AtkAxislLR2WayLeftX = 73,
+						CommandFsm_AtkAnaloglUpX = 74,
+						CommandFsm_AtkAnaloglDownX = 75,
+						CommandFsm_AtkAnaloglLeftX = 76,
+						CommandFsm_AtkAnaloglRightX = 77,
+						CommandFsm_AtkAxislRightA = 78,
+						CommandFsm_AtkAxislLeftA = 79,
+						CommandFsm_AtkAxislFrontA = 80,
+						CommandFsm_AtkAxislBackA = 81,
+						CommandFsm_AtkAxislLRF3WayRightA = 82,
+						CommandFsm_AtkAxislLRF3WayLeftA = 83,
+						CommandFsm_AtkAxislLRF3WayFrontA = 84,
+						CommandFsm_AtkAxislLRB3WayRightA = 85,
+						CommandFsm_AtkAxislLRB3WayLeftA = 86,
+						CommandFsm_AtkAxislLRB3WayBackA = 87,
+						CommandFsm_AtkAxislFB2WayFrontA = 88,
+						CommandFsm_AtkAxislFB2WayFrontOrNeutralA = 89,
+						CommandFsm_AtkAxislFB2WayBackA = 90,
+						CommandFsm_AtkAxislLR2WayRightA = 91,
+						CommandFsm_AtkAxislLR2WayLeftA = 92,
+						CommandFsm_AtkAnaloglUpA = 93,
+						CommandFsm_AtkAnaloglDownA = 94,
+						CommandFsm_AtkAnaloglLeftA = 95,
+						CommandFsm_AtkAnaloglRightA = 96,
+						CommandFsm_AtkAxislRightXA = 97,
+						CommandFsm_AtkAxislLeftXA = 98,
+						CommandFsm_AtkAxislFrontXA = 99,
+						CommandFsm_AtkAxislBackXA = 100,
+						CommandFsm_AtkAxislLRF3WayRightXA = 101,
+						CommandFsm_AtkAxislLRF3WayLeftXA = 102,
+						CommandFsm_AtkAxislLRF3WayFrontXA = 103,
+						CommandFsm_AtkAxislLRB3WayRightXA = 104,
+						CommandFsm_AtkAxislLRB3WayLeftXA = 105,
+						CommandFsm_AtkAxislLRB3WayBackXA = 106,
+						CommandFsm_AtkAxislFB2WayFrontXA = 107,
+						CommandFsm_AtkAxislFB2WayBackXA = 108,
+						CommandFsm_AtkAxislLR2WayRightXA = 109,
+						CommandFsm_AtkAxislLR2WayLeftXA = 110,
+						CommandFsm_AtkAnaloglUpXA = 111,
+						CommandFsm_AtkAnaloglDownXA = 112,
+						CommandFsm_AtkAnaloglLeftXA = 113,
+						CommandFsm_AtkAnaloglRightXA = 114,
+						CommandFsm_AtkAxislRightR1 = 115,
+						CommandFsm_AtkAxislLeftR1 = 116,
+						CommandFsm_AtkAxislFrontR1 = 117,
+						CommandFsm_AtkAxislBackR1 = 118,
+						CommandFsm_AtkAxislLRF3WayRightR1 = 119,
+						CommandFsm_AtkAxislLRF3WayLeftR1 = 120,
+						CommandFsm_AtkAxislLRF3WayFrontR1 = 121,
+						CommandFsm_AtkAxislLRB3WayRightR1 = 122,
+						CommandFsm_AtkAxislLRB3WayLeftR1 = 123,
+						CommandFsm_AtkAxislLRB3WayBackR1 = 124,
+						CommandFsm_AtkAxislFB2WayFrontR1 = 125,
+						CommandFsm_AtkAxislFB2WayBackR1 = 126,
+						CommandFsm_AtkAxislLR2WayRightR1 = 127,
+						CommandFsm_AtkAxislLR2WayLeftR1 = 128,
+						CommandFsm_AtkAnaloglUpR1 = 129,
+						CommandFsm_AtkAnaloglDownR1 = 130,
+						CommandFsm_AtkAnaloglLeftR1 = 131,
+						CommandFsm_AtkAnaloglRightR1 = 132,
+						CommandFsm_AtkAxislRightXR1 = 133,
+						CommandFsm_AtkAxislLeftXR1 = 134,
+						CommandFsm_AtkAxislFrontXR1 = 135,
+						CommandFsm_AtkAxislBackXR1 = 136,
+						CommandFsm_AtkAnaloglXA = 137,
+						CommandFsm_AtkAnaloglA = 138,
+						CommandFsm_AtkAnaloglX = 139,
+						CommandFsm_AtkAnaloglR1 = 140,
+						CommandFsm_AtkNeutralXA = 141,
+						CommandFsm_AtkNeutralA = 142,
+						CommandFsm_AtkNeutralX = 143,
+						CommandFsm_AtkNeutralR1 = 144,
+						CommandFsm_ItemY = 145,
+						CommandFsm_ItemYOn = 146,
+						CommandFsm_ItemYOff = 147,
+						CommandFsm_KunaiAimZLOn = 148,
+						CommandFsm_RideDriftOn = 149,
+						CommandFsm_RideDriftOff = 150,
+						CommandFsm_RideJump = 151,
+						CommandFsm_SlidingJump = 152,
+						CommandFsm_Marionette = 153,
+						CommandFsm_OtomoPopAction = 154,
+						CommandFsm_AtkRB = 155,
+						CommandFsm_HagitoriPopAction = 156,
+						CommandFsm_TrapRemovePopAction = 157,
+						CommandFsm_LongJumpPointRelease = 158,
+						CommandFsm_Fishing = 159,
+						CommandFsm_DropEnvCreature = 160,
+						CommandFsm_AnyTrigger = 161,
+						CommandFsm_OtomoCommunicationStart = 162,
+						CommandFsm_OtomoCommunicationA = 163,
+						CommandFsm_OtomoCommunicationB = 164,
+						CommandFsm_OtomoCommunicationX = 165,
+						CommandFsm_OtomoCommunicationY = 166,
+						CommandFsm_AtkR1ZR = 167,
+						CommandFsm_AtkR1Off = 168,
+						CommandFsm_LobbyWireUp = 169,
+						CommandFsm_LobbyWireFront = 170,
+						CommandFsm_LobbyWireTarget = 171,
+						CommandFsm_Decide = 172,
+						CommandFsm_Cancel = 173,
+						CommandFsm_AtkR1On = 174,
+						CommandFsm_Gimmick_Hold = 175,
+						CommandFsm_Gimmick_HoldCancel = 176,
+						CommandFsm_ActionStart = 177,
+						CommandFsm_ActionEnd = 178,
+						CommandFsm_ItemTake = 179,
+						CommandFsm_AtkXAR1_ZR = 180,
+						CommandFsm_AtkXAorR1 = 181,
+						CommandFsm_GimmickShotTrg_AorZR = 182,
+						CommandFsm_GimmickShotTrg_X = 183,
+						CommandFsm_GimmickShotTrg_Y = 184,
+						CommandFsm_GimmickShotOn_AorZR = 185,
+						CommandFsm_GimmickShotOn_X = 186,
+						CommandFsm_GimmickShotOn_Y = 187,
+						CommandFsm_AtkXAorR1Trg = 188,
+						CommandFsm_GuardTrg = 189,
+						CommandFsm_AtkZRZL = 190,
+						CommandFsm_AtkXOnOriginal = 191,
+						CommandFsm_AtkAOnOriginal = 192,
+						CommandFsm_PopActionOn = 193,
+						CommandFsm_ActionB = 194,
+						CommandFsm_CancelNoDelay = 195,
+					} CmdType;
+				}    
+				else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandBase.CommandConditionCommon") == 0) {
+					enum { 
+						CommandConditionCommon_None = 0,
+						CommandConditionCommon_CmnStaminaEnoughEscape = 1,
+						CommandConditionCommon_CmnHunterWireNotEmpty = 2,
+						CommandConditionCommon_CmnHunterWireOverTwo = 3,
+						CommandConditionCommon_CmnHunterWireNotEmptyStaminaEnoughEscape = 4,
+						CommandConditionCommon_CmnBowgunRecoilMotionSpeedTypeFlyNotNone = 5,
+						CommandConditionCommon_CmnPlayerStateIsStand = 6,
+						CommandConditionCommon_CmnBallistaTutorial_Hold = 7,
+						CommandConditionCommon_CmnBallistaTutorial_Cancel = 8,
+						CommandConditionCommon_CmnHunterWireEmptyAndIsStand = 9,
+						CommandConditionCommon_CmnHunterWireNotEmptyOrEmptyStand = 10,
+						CommandConditionCommon_CmnOnGround = 11,
+					} _ConditionCommonEnum;
+				}
+				else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2ConditionStick.Command") == 0) {
+					enum { 
+						Command_NONE = 0,
+						Command_DASH = 1,
+						Command_RUN = 2,
+						Command_WALK = 3,
+						Command_NEUTRAL = 4,
+						Command_WALK_END = 5,
+						Command_UNNEUTRAL = 6,
+						Command_DASH_NONE = 7,
+						Command_GUARD = 8,
+						Command_GUARD_NONE = 9,
+						Command_WALL_RUN = 10,
+						Command_AXISL_RIGHT = 11,
+						Command_AXISL_LEFT = 12,
+						Command_AXISL_FRONT = 13,
+						Command_AXISL_FRONT_NEED_INPUT = 14,
+						Command_AXISL_BACK = 15,
+						Command_AXISL_3WAY_RIGHT = 16,
+						Command_AXISL_3WAY_LEFT = 17,
+						Command_AXISL_3WAY_FRONT = 18,
+						Command_AXISL_3WAY_FRONT_NEED_INPUT = 19,
+						Command_AXISL_LRB3WAY_RIGHT = 20,
+						Command_AXISL_LRB3WAY_LEFT = 21,
+						Command_AXISL_LRB3WAY_BACK = 22,
+						Command_AXISL_2WAY_FRONT_NEED_INPUT = 23,
+						Command_AXISL_2WAY_FRONT = 24,
+						Command_AXISL_2WAY_BACK = 25,
+						Command_AXISL_2WAY_RIGHT = 26,
+						Command_AXISL_2WAY_LEFT = 27,
+						Command_STEP_CLIMB_S = 28,
+						Command_STEP_CLIMB_M = 29,
+						Command_STEP_CLIMB_L = 30,
+						Command_ANA_L_UP = 31,
+						Command_ANA_L_DOWN = 32,
+						Command_ANA_L_LEFT = 33,
+						Command_ANA_L_RIGHT = 34,
+						Command_ANA_L_RIGHT_UP = 35,
+						Command_ANA_L_RIGHT_DOWN = 36,
+						Command_ANA_L_LEFT_UP = 37,
+						Command_ANA_L_LEFT_DOWN = 38,
+						Command_ANA_L_UP_NONE = 39,
+						Command_ANA_L_DOWN_NONE = 40,
+						Command_ANA_L_LEFT_NONE = 41,
+						Command_ANA_L_RIGHT_NONE = 42,
+						Command_ANA_L_RIGHT_UP_NONE = 43,
+						Command_ANA_L_RIGHT_DOWN_NONE = 44,
+						Command_ANA_L_LEFT_UP_NONE = 45,
+						Command_ANA_L_LEFT_DOWN_NONE = 46,
+						Command_WALK_DELAY = 47,
+						Command_JUST_WALK = 48,
+						Command_NEUTRAL_DELAY = 49,
+						Command_AXISL_5WAY_FRONT = 50,
+						Command_AXISL_5WAY_UP_RIGHT = 51,
+						Command_AXISL_5WAY_UP_LEFT = 52,
+						Command_AXISL_5WAY_DOWN_RIGHT = 53,
+						Command_AXISL_5WAY_DOWN_LEFT = 54,
+						Command_AXISL_5WAY_NOT_FRONT = 55,
+						Command_DASH_DELAY = 56,
+						Command_WALLRUN_CARRY = 57,
+						Command_RIDE_DASH = 58,
+						Command_RIDE_DASH_NONE = 59,
+						Command_DASH_NO_LOOK_DASH_TIMER = 60,
+						Command_RUN_NO_LOOK_DASH_TIMER = 61,
+					} CmdType;
+				}
+				else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2ConditionSuccessCommandStick.StickInput") == 0) {
+					enum { 
+						StickInput_None = 0,
+						StickInput_AxislLRF3WayRight = 1,
+						StickInput_AxislLRF3WayLeft = 2,
+						StickInput_AxislLRF3WayFront = 3,
+						StickInput_Axisl4WayRight = 4,
+						StickInput_Axisl4WayLeft = 5,
+						StickInput_Axisl4WayFront = 6,
+						StickInput_Axisl4WayBack = 7,
+						StickInput_Neutral = 8,
+					} _stickInputType;
+				}
+				else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2ConditionSuccessCommandStick.Command") == 0) {
+					enum { 
+						Command_Invalid = 0,
+						Command_Escape = 1,
+						Command_WireEscape = 2,
+						Command_Walk_ForDamageCancel = 3,
+						Command_Run_ForDamageCancel = 4,
+						Command_Bow_ChargeStep = 5,
+						Command_Bow_WireSquat = 6,
+					} _command;
+				}
+                else if (Strcmp(fieldOrgTypeName, "snow.shell.HornShellManager.HornShell002_ID") == 0) {
+					enum { 
+                        HornShell002_ID_MusicS = 0,
+                        HornShell002_ID_MusicS_Side = 1,
+                        HornShell002_ID_MusicB = 2,
+                        HornShell002_ID_MusicB2 = 3,
+                        HornShell002_ID_MusicB3 = 4,
+                        HornShell002_ID_MusicB4 = 5,
+                        HornShell002_ID_StrikeMusic = 6,
+                        HornShell002_ID_BeatMusic = 7,
+                        HornShell002_ID_Revolt = 8,
+                        HornShell002_ID_Max = 9,
+                        HornShell002_ID_None = 65535,
+                    } _SetType;
+                } else
+					FSkip(4); //in snow.player.fsm
 			}
-			else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2ConditionStick.Command") == 0) {
-				enum { 
-					Command_NONE = 0,
-					Command_DASH = 1,
-					Command_RUN = 2,
-					Command_WALK = 3,
-					Command_NEUTRAL = 4,
-					Command_WALK_END = 5,
-					Command_UNNEUTRAL = 6,
-					Command_DASH_NONE = 7,
-					Command_GUARD = 8,
-					Command_GUARD_NONE = 9,
-					Command_WALL_RUN = 10,
-					Command_AXISL_RIGHT = 11,
-					Command_AXISL_LEFT = 12,
-					Command_AXISL_FRONT = 13,
-					Command_AXISL_FRONT_NEED_INPUT = 14,
-					Command_AXISL_BACK = 15,
-					Command_AXISL_3WAY_RIGHT = 16,
-					Command_AXISL_3WAY_LEFT = 17,
-					Command_AXISL_3WAY_FRONT = 18,
-					Command_AXISL_3WAY_FRONT_NEED_INPUT = 19,
-					Command_AXISL_LRB3WAY_RIGHT = 20,
-					Command_AXISL_LRB3WAY_LEFT = 21,
-					Command_AXISL_LRB3WAY_BACK = 22,
-					Command_AXISL_2WAY_FRONT_NEED_INPUT = 23,
-					Command_AXISL_2WAY_FRONT = 24,
-					Command_AXISL_2WAY_BACK = 25,
-					Command_AXISL_2WAY_RIGHT = 26,
-					Command_AXISL_2WAY_LEFT = 27,
-					Command_STEP_CLIMB_S = 28,
-					Command_STEP_CLIMB_M = 29,
-					Command_STEP_CLIMB_L = 30,
-					Command_ANA_L_UP = 31,
-					Command_ANA_L_DOWN = 32,
-					Command_ANA_L_LEFT = 33,
-					Command_ANA_L_RIGHT = 34,
-					Command_ANA_L_RIGHT_UP = 35,
-					Command_ANA_L_RIGHT_DOWN = 36,
-					Command_ANA_L_LEFT_UP = 37,
-					Command_ANA_L_LEFT_DOWN = 38,
-					Command_ANA_L_UP_NONE = 39,
-					Command_ANA_L_DOWN_NONE = 40,
-					Command_ANA_L_LEFT_NONE = 41,
-					Command_ANA_L_RIGHT_NONE = 42,
-					Command_ANA_L_RIGHT_UP_NONE = 43,
-					Command_ANA_L_RIGHT_DOWN_NONE = 44,
-					Command_ANA_L_LEFT_UP_NONE = 45,
-					Command_ANA_L_LEFT_DOWN_NONE = 46,
-					Command_WALK_DELAY = 47,
-					Command_JUST_WALK = 48,
-					Command_NEUTRAL_DELAY = 49,
-					Command_AXISL_5WAY_FRONT = 50,
-					Command_AXISL_5WAY_UP_RIGHT = 51,
-					Command_AXISL_5WAY_UP_LEFT = 52,
-					Command_AXISL_5WAY_DOWN_RIGHT = 53,
-					Command_AXISL_5WAY_DOWN_LEFT = 54,
-					Command_AXISL_5WAY_NOT_FRONT = 55,
-					Command_DASH_DELAY = 56,
-					Command_WALLRUN_CARRY = 57,
-					Command_RIDE_DASH = 58,
-					Command_RIDE_DASH_NONE = 59,
-					Command_DASH_NO_LOOK_DASH_TIMER = 60,
-					Command_RUN_NO_LOOK_DASH_TIMER = 61,
-				} CmdType;
-			}
-			else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2ConditionSuccessCommandStick.StickInput") == 0) {
-				enum { 
-					StickInput_None = 0,
-					StickInput_AxislLRF3WayRight = 1,
-					StickInput_AxislLRF3WayLeft = 2,
-					StickInput_AxislLRF3WayFront = 3,
-					StickInput_Axisl4WayRight = 4,
-					StickInput_Axisl4WayLeft = 5,
-					StickInput_Axisl4WayFront = 6,
-					StickInput_Axisl4WayBack = 7,
-					StickInput_Neutral = 8,
-				} _stickInputType;
-			}
-			else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2ConditionSuccessCommandStick.Command") == 0) {
-				enum { 
-					Command_Invalid = 0,
-					Command_Escape = 1,
-					Command_WireEscape = 2,
-					Command_Walk_ForDamageCancel = 3,
-					Command_Run_ForDamageCancel = 4,
-					Command_Bow_ChargeStep = 5,
-					Command_Bow_WireSquat = 6,
-				} _command;
-			}
-			else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandShortSword.CommandConditionWp") == 0) {
-				enum { 
-					PlayerFsm2CommandShortSword_CommandConditionWp_WpNone = 0,
-				} _ConditionWpEnum;
-			}
-			else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandDogRide.CommandConditionWp") == 0) {
-				enum { 
-					PlayerFsm2CommandDogRide_CommandConditionWp_WpNone = 0,
-					PlayerFsm2CommandDogRide_CommandConditionWp_StepClimbSS = 1,
-					PlayerFsm2CommandDogRide_CommandConditionWp_StepClimbS = 2,
-					PlayerFsm2CommandDogRide_CommandConditionWp_StepClimbM = 3,
-					PlayerFsm2CommandDogRide_CommandConditionWp_StepClimbL = 4,
-					PlayerFsm2CommandDogRide_CommandConditionWp_StepClimbSSNoLever = 5,
-					PlayerFsm2CommandDogRide_CommandConditionWp_StepClimbSNoLever = 6,
-					PlayerFsm2CommandDogRide_CommandConditionWp_StepClimbMNoLever = 7,
-					PlayerFsm2CommandDogRide_CommandConditionWp_StepClimbLNoLever = 8,
-					PlayerFsm2CommandDogRide_CommandConditionWp_WallClimbStart = 9,
-					PlayerFsm2CommandDogRide_CommandConditionWp_WallClimbEndTop = 10,
-					PlayerFsm2CommandDogRide_CommandConditionWp_WallClimbEndBtm = 11,
-					PlayerFsm2CommandDogRide_CommandConditionWp_FrontStep = 12,
-					PlayerFsm2CommandDogRide_CommandConditionWp_SelfJumpClimbS = 13,
-					PlayerFsm2CommandDogRide_CommandConditionWp_SelfJumpClimbL = 14,
-					PlayerFsm2CommandDogRide_CommandConditionWp_SelfJumpWallKick = 15,
-					PlayerFsm2CommandDogRide_CommandConditionWp_SelfJumpTustaClimb = 16,
-					PlayerFsm2CommandDogRide_CommandConditionWp_LockOnEnemyExist = 17,
-					PlayerFsm2CommandDogRide_CommandConditionWp_RidingDogStand = 18,
-				} _ConditionWpEnum;
-			}
-			else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandDualBlades.CommandConditionWp") == 0) {
-				enum { 
-					PlayerFsm2CommandDualBlades_CommandConditionWp_WpNone = 0,
-					PlayerFsm2CommandDualBlades_CommandConditionWp_KijinKyouka = 1,
-					PlayerFsm2CommandDualBlades_CommandConditionWp_CmnHunterWireNotEmptyAndNotReplaceAttackTypeC = 2,
-				} _ConditionWpEnum;
-			}
-			else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandInsectGlaive.CommandConditionWp") == 0) {
-				enum { 
-					PlayerFsm2CommandInsectGlaive_CommandConditionWp_WpNone = 0,
-					PlayerFsm2CommandInsectGlaive_CommandConditionWp_IsReplaceAttackC = 1,
-					PlayerFsm2CommandInsectGlaive_CommandConditionWp_IsReplaceAttackCandWireNotEmpty = 2,
-					PlayerFsm2CommandInsectGlaive_CommandConditionWp_IsReplaceAttackCandWireOverTwo = 3,
-					PlayerFsm2CommandInsectGlaive_CommandConditionWp_IsInsectStateIsNotWait = 4,
-					PlayerFsm2CommandInsectGlaive_CommandConditionWp_IsAerialCountNoMax = 5,
-				} _ConditionWpEnum;
-			}
-			else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandChargeAxe.CommandConditionWp") == 0) {
-				enum { 
-					PlayerFsm2CommandChargeAxe_CommandConditionWp_WpNone = 0,
-					PlayerFsm2CommandChargeAxe_CommandConditionWp_ShieldBuff = 1,
-				} _ConditionWpEnum;
-			}
-			else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandSlashAxe.CommandConditionWp") == 0) {
-				enum { 
-					PlayerFsm2CommandSlashAxe_CommandConditionWp_WpNone = 0,
-					PlayerFsm2CommandSlashAxe_CommandConditionWp_BottleEmpty = 1,
-					PlayerFsm2CommandSlashAxe_CommandConditionWp_BottleNotEmpty = 2,
-					PlayerFsm2CommandSlashAxe_CommandConditionWp_BottleChangeable = 3,
-					PlayerFsm2CommandSlashAxe_CommandConditionWp_BottleNotChangeable = 4,
-					PlayerFsm2CommandSlashAxe_CommandConditionWp_BottleNotEmpty_ReplaceAttackTypeA = 5,
-					PlayerFsm2CommandSlashAxe_CommandConditionWp_BottleNotEmpty_ReplaceAttackTypeB = 6,
-					PlayerFsm2CommandSlashAxe_CommandConditionWp_BottleNotEmpty_ReplaceAttackTypeC = 7,
-					PlayerFsm2CommandSlashAxe_CommandConditionWp_BottleNotEmpty_NotReplaceAttackTypeA = 8,
-					PlayerFsm2CommandSlashAxe_CommandConditionWp_BottleNotEmpty_NotReplaceAttackTypeB = 9,
-					PlayerFsm2CommandSlashAxe_CommandConditionWp_BottleNotEmpty_NotReplaceAttackTypeC = 10,
-					PlayerFsm2CommandSlashAxe_CommandConditionWp_HunterWireNotEmpty_BottleNotEmpty_ReplaceAttackTypeC = 11,
-				} _ConditionWpEnum;
-			}
-			else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandHammer.CommandConditionWp") == 0) {
-				enum { 
-					PlayerFsm2CommandHammer_CommandConditionWp_WpNone = 0,
-				} _ConditionWpEnum;
-			}
-			else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandGunLance.CommandConditionWp") == 0) {
-				enum { 
-					PlayerFsm2CommandGunLance_CommandConditionWp_WpNone = 0,
-					PlayerFsm2CommandGunLance_CommandConditionWp_UpperSlash = 1,
-					PlayerFsm2CommandGunLance_CommandConditionWp_Blow = 2,
-					PlayerFsm2CommandGunLance_CommandConditionWp_SideSlash = 3,
-					PlayerFsm2CommandGunLance_CommandConditionWp_GuardStab = 4,
-					PlayerFsm2CommandGunLance_CommandConditionWp_CanReload = 5,
-					PlayerFsm2CommandGunLance_CommandConditionWp_Prohibit_AtkX = 6,
-					PlayerFsm2CommandGunLance_CommandConditionWp_CanShotSharpnessLv = 7,
-					PlayerFsm2CommandGunLance_CommandConditionWp_NoHitUpperSting = 8,
-					PlayerFsm2CommandGunLance_CommandConditionWp_IsNotReplaceAttackBandWireNotEmpty = 9,
-					PlayerFsm2CommandGunLance_CommandConditionWp_IsReplaceAttackBWireNotEmptyCheck = 10,
-				} _ConditionWpEnum;
-			}
-			else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandLobby.CommandConditionWp") == 0) {
-				enum { 
-					PlayerFsm2CommandLobby_CommandConditionWp_WpNone = 0,
-					PlayerFsm2CommandLobby_CommandConditionWp_OwlEnableFly = 1,
-				} _ConditionWpEnum;
-			}
-			else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandHeavyBowgun.CommandConditionWp") == 0) {
-				enum { 
-					PlayerFsm2CommandHeavyBowgun_CommandConditionWp_WpNone = 0,
-					PlayerFsm2CommandHeavyBowgun_CommandConditionWp_ReloadOk = 1,
-					PlayerFsm2CommandHeavyBowgun_CommandConditionWp_NormalBulletModeOnly = 2,
-					PlayerFsm2CommandHeavyBowgun_CommandConditionWp_WyvernSnipeBulletNotEmpty = 3,
-					PlayerFsm2CommandHeavyBowgun_CommandConditionWp_WireAnchor = 4,
-					PlayerFsm2CommandHeavyBowgun_CommandConditionWp_IsKakusan = 5,
-					PlayerFsm2CommandHeavyBowgun_CommandConditionWp_CanShot = 6,
-				} _ConditionWpEnum;
-			}
-			else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandLongSword.CommandConditionWp") == 0) {
-				enum { 
-					PlayerFsm2CommandLongSword_CommandConditionWp_WpNone = 0,
-					PlayerFsm2CommandLongSword_CommandConditionWp_GaugeCheck = 1,
-					PlayerFsm2CommandLongSword_CommandConditionWp_GaugeLvCheck = 2,
-				} _ConditionWpEnum;
-			}
-			else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandLightBowgun.CommandConditionWp") == 0) {
-				enum { 
-					PlayerFsm2CommandLightBowgun_CommandConditionWp_WpNone = 0,
-					PlayerFsm2CommandLightBowgun_CommandConditionWp_ReloadOk = 1,
-					PlayerFsm2CommandLightBowgun_CommandConditionWp_WyvernBlastOk = 2,
-					PlayerFsm2CommandLightBowgun_CommandConditionWp_IsKakusan = 3,
-					PlayerFsm2CommandLightBowgun_CommandConditionWp_CanShot = 4,
-				} _ConditionWpEnum;
-			}
-			else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandBow.CommandConditionWp") == 0) {
-				enum { 
-					PlayerFsm2CommandBow_CommandConditionWp_WpNone = 0,
-					PlayerFsm2CommandBow_CommandConditionWp_IsReplaceAttackC_WireCheck = 1,
-				} _ConditionWpEnum;
-			}
-			else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandHorn.CommandConditionWp") == 0) {
-				enum { 
-					PlayerFsm2CommandHorn_CommandConditionWp_WpNone = 0,
-					PlayerFsm2CommandHorn_CommandConditionWp_MusicOk = 1,
-					PlayerFsm2CommandHorn_CommandConditionWp_RevoltOk = 2,
-				} _ConditionWpEnum;
-			}
-			else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandGreatSword.CommandConditionWp") == 0) {
-				enum { 
-					PlayerFsm2CommandGreatSword_CommandConditionWp_WpNone = 0,
-					PlayerFsm2CommandGreatSword_CommandConditionWp_WireUpGauge = 1,
-				} _ConditionWpEnum;
-			}
-			else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandLance.CommandConditionWp") == 0) {
-				enum { 
-					PlayerFsm2CommandLance_CommandConditionWp_WpNone = 0,
-				} _ConditionWpEnum;
-			}
-			else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.FsmCommandChargeAxe.CommandFsmWp") == 0) {
-				enum { 
-					FsmCommandChargeAxe_CommandFsmWp_WpNone = 0,
-				} _commandWpEnum;
-			}
-			else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.FsmCommandHeavyBowgun.CommandFsmWp") == 0) {
-				enum {  
-					FsmCommandHeavyBowgun_CommandFsmWp_WpNone = 0,
-					FsmCommandHeavyBowgun_CommandFsmWp_ShotTrigger = 1,
-					FsmCommandHeavyBowgun_CommandFsmWp_ShotOn = 2,
-					FsmCommandHeavyBowgun_CommandFsmWp_ShotOnWithoutStrike = 3,
-					FsmCommandHeavyBowgun_CommandFsmWp_ShotOff = 4,
-					FsmCommandHeavyBowgun_CommandFsmWp_SpecialBullet = 5,
-					FsmCommandHeavyBowgun_CommandFsmWp_Reload = 6,
-					FsmCommandHeavyBowgun_CommandFsmWp_ReloadWithoutA = 7,
-					FsmCommandHeavyBowgun_CommandFsmWp_Strike = 8,
-					FsmCommandHeavyBowgun_CommandFsmWp_FlyAtkX = 9,
-					FsmCommandHeavyBowgun_CommandFsmWp_ShotOnDelay = 10,
-					FsmCommandHeavyBowgun_CommandFsmWp_ShotTriggerFly = 11,
-					FsmCommandHeavyBowgun_CommandFsmWp_ShotOnFly = 12,
-					FsmCommandHeavyBowgun_CommandFsmWp_WireUpReadyHeavy = 13,
-					FsmCommandHeavyBowgun_CommandFsmWp_WireFrontReadyHeavy = 14,
-				} _commandWpEnum;
-			}
-			else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.FsmCommandInsectGlaive.CommandFsmWp") == 0) {
-				enum { 
-					FsmCommandInsectGlaive_CommandFsmWp_WpNone = 0,
-					FsmCommandInsectGlaive_CommandFsmWp_OnWall = 1,
-					FsmCommandInsectGlaive_CommandFsmWp_OnWallToRun = 2,
-					FsmCommandInsectGlaive_CommandFsmWp_MarkingShot = 3,
-				} _commandWpEnum;
-			}
-			else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.FsmCommandShortSword.CommandFsmWp") == 0) {
-				enum { 
-					FsmCommandShortSword_CommandFsmWp_WpNone = 0,
-					FsmCommandShortSword_CommandFsmWp_NoChargeA = 1,
-					FsmCommandShortSword_CommandFsmWp_ChargeA = 2,
-					FsmCommandShortSword_CommandFsmWp_UseItemWpOn = 3,
-					FsmCommandShortSword_CommandFsmWp_UseItemWpOnZButton = 4,
-					FsmCommandShortSword_CommandFsmWp_SS_WpEnd = 5,
-				} _commandWpEnum;
-			}
-			else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.FsmCommandHammer.CommandFsmWp") == 0) {
-				enum { 
-					FsmCommandHammer_CommandFsmWp_WpNone = 0,
-				} _commandWpEnum;
-			}
-			else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.FsmCommandLobby.CommandFsmWp") == 0) {
-				enum { 
-				   FsmCommandLobby_CommandFsmWp_WpNone = 0,
-				   FsmCommandLobby_CommandFsmWp_LobbyRideStart = 1,
-				   FsmCommandLobby_CommandFsmWp_LobbyRideEnd = 2,
-				} _commandWpEnum;
-			}
-			else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.FsmCommandDogRide.CommandFsmWp") == 0) {
-				enum { 
-				   FsmCommandDogRide_CommandFsmWp_WpNone = 0,
-				} _commandWpEnum;
-			}
-			else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.FsmCommandLightBowgun.CommandFsmWp") == 0) {
-				enum { 
-					FsmCommandLightBowgun_CommandFsmWp_WpNone = 0,
-					FsmCommandLightBowgun_CommandFsmWp_ShotTrigger = 1,
-					FsmCommandLightBowgun_CommandFsmWp_SpecialBullet = 2,
-					FsmCommandLightBowgun_CommandFsmWp_Reload = 3,
-					FsmCommandLightBowgun_CommandFsmWp_Strike = 4,
-					FsmCommandLightBowgun_CommandFsmWp_FlyAtkX = 5,
-				} _commandWpEnum;
-			}
-			else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.FsmCommandHorn.CommandFsmWp") == 0) {
-				enum { 
-					FsmCommandHorn_CommandFsmWp_WpNone = 0,
-					FsmCommandHorn_CommandFsmWp_Music = 1,
-				} _commandWpEnum;
-			}
-			else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.FsmCommandGunLance.CommandFsmWp") == 0) {
-				enum { 
-					FsmCommandGunLance_CommandFsmWp_WpNone = 0,
-					FsmCommandGunLance_CommandFsmWp_DragonSlayCannon = 1,
-				} _commandWpEnum;
-			}
-			else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.FsmCommandLongSword.CommandFsmWp") == 0) {
-				enum { 
-					FsmCommandLongSword_CommandFsmWp_WpNone = 0,
-				} _commandWpEnum;
-			}
-			else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.FsmCommandSlashAxe.CommandFsmWp") == 0) {
-				enum { 
-					FsmCommandSlashAxe_CommandFsmWp_WpNone = 0,
-					FsmCommandSlashAxe_CommandFsmWp_SwingLoopToFinish = 1,
-					FsmCommandSlashAxe_CommandFsmWp_SwingLoopToFront = 2,
-				} _commandWpEnum;
-			}
-			else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.FsmCommandBow.CommandFsmWp") == 0) {
-				enum { 
-					FsmCommandBow_CommandFsmWp_WpNone = 0,
-					FsmCommandBow_CommandFsmWp_ReadyBowEscape = 1,
-					FsmCommandBow_CommandFsmWp_ReadyShot = 2,
-					FsmCommandBow_CommandFsmWp_FireShot = 3,
-					FsmCommandBow_CommandFsmWp_FireShotTrigger = 4,
-					FsmCommandBow_CommandFsmWp_DragonShot = 5,
-					FsmCommandBow_CommandFsmWp_ChangeBottle = 6,
-					FsmCommandBow_CommandFsmWp_ComboArrowAtk = 7,
-					FsmCommandBow_CommandFsmWp_BowAtkA = 8,
-					FsmCommandBow_CommandFsmWp_BowAtkARelease = 9,
-					FsmCommandBow_CommandFsmWp_BowWireUpReadyBow = 10,
-					FsmCommandBow_CommandFsmWp_BowWireFrontReadyBow = 11,
-					FsmCommandBow_CommandFsmWp_ReadyHighAngleShoot = 12,
-				} _commandWpEnum;
-			}
-			else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.FsmCommandGreatSword.CommandFsmWp") == 0) {
-				enum { 
-					FsmCommandGreatSword_CommandFsmWp_WpNone = 0,
-				} _commandWpEnum;
-			}
-			else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.FsmCommandLance.CommandFsmWp") == 0) {
-				enum { 
-					FsmCommandLance_CommandFsmWp_WpNone = 0,
-					FsmCommandLance_CommandFsmWp_PowerGuard = 1,
-					FsmCommandLance_CommandFsmWp_AtkAxislBackB = 2,
-					FsmCommandLance_CommandFsmWp_AxislNeutralB = 3,
-					FsmCommandLance_CommandFsmWp_CancelPowerGuard = 4,
-					FsmCommandLance_CommandFsmWp_BlinkChainDeathMatch = 5,
-					FsmCommandLance_CommandFsmWp_GuardDash = 6,
-				} _commandWpEnum;
-			}
-			else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.FsmCommandDualBlades.CommandFsmWp") == 0) {
-				enum { 
-					FsmCommandDualBlades_CommandFsmWp_WpNone = 0,
-				} _commandWpEnum;
-			} else
-				FSkip(4);
-		} else
-			FSkip(4);
+		}
+        else if (Strcmp(fieldOrgTypeName, "snow.player.Horn.StateActionType") == 0){
+		    enum { 
+                StateActionType_None = 0,
+                StateActionType_Front = 1,
+                StateActionType_Strike = 2,
+                StateActionType_StrikeRepA = 3,
+                StateActionType_Left = 4,
+                StateActionType_Right = 5,
+                StateActionType_Side = 6,
+                StateActionType_Back = 7,
+                StateActionType_ShortBack = 8,
+                StateActionType_Kick = 9,
+                StateActionType_Swing = 10,
+                StateActionType_Beat = 11,
+                StateActionType_Revolt = 12,
+                StateActionType_WireStrike = 13,
+                StateActionType_WireTuning = 14,
+                StateActionType_Kan = 15,
+            } _Type;
+        } 
+        else if (Strcmp(fieldOrgTypeName, "snow.player.Horn.MusicType") == 0){
+		    enum { 
+                MusicType_TypeB = 0,
+                MusicType_TypeR = 1,
+                MusicType_TypeG = 2,
+                MusicType_Max = 3,
+                MusicType_TypeNone = 3,
+            } _SetType;
+        } else
+			FSkip(4); // in snow.player
 	} else
-		FSkip(4);
+		FSkip(4); //not snow
     
 }
