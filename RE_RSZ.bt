@@ -12,10 +12,10 @@
 
 //------------------------------------------------
 //              Option:                                                            //Effect:
-local string    RSZVersion       <hidden=false>       = "DMC5";                    //change between RE2, RE3, RE8 or DMC5
+local string    RSZVersion       <hidden=false>       = "MHRise";                  //change between RE2, RE3, RE8 or DMC5
 local int       Nesting          <hidden=true>        = TRUE;                      //Attempt to nest class instances inside eachother
 local int       ShowAlignment    <hidden=true>        = FALSE;                     //Show metadata for each variable
-local int       ShowChildRSZs    <hidden=true>        = FALSE;                     //Show all RSZs one after another, non-nested. Disabling hides nested RSZHeaders
+local int       ShowChildRSZs    <hidden=true>        = TRUE;                      //Show all RSZs one after another, non-nested. Disabling hides nested RSZHeaders
 local int       UseSpacers       <hidden=true>        = TRUE;                      //Show blank rows between some structs
 local int       AutoDetectGame   <hidden=true>        = TRUE;                      //Automatically detect RSZVersion based on the name + ext of the file being viewed
 local int       RedetectBHVT     <hidden=true>        = TRUE;                      //Will automatically redetect the next BHVT node if there is a problem 
@@ -24,6 +24,7 @@ local int       HideRawNodes     <hidden=true>        = FALSE;                  
 local int       SortRequestSets  <hidden=true>        = TRUE;                      //Sorts RCOL RequestSets by their IDs
 local int       ExposeUserDatas  <hidden=true>        = TRUE;                      //Makes RSZFiles that contain embedded userDatas start after the Userdatas, for ctrl+J
 local int       SeekByGameObject <hidden=true>        = TRUE;                      //Will automatically seek between detected GameObjects to fix reading errors
+local int       ShowEnum         <hidden=true>        = TRUE;                      //Show enum to increase readibility
 
 //Path to Noesis.exe
 local wstring NoesisPath <hidden=true> =            "C:\\Program Files (x86)\\Noesis\\Noesis.exe";
@@ -137,60 +138,7 @@ ParseJson(JsonPath);
 //===========================
 //Create your own enums here:
 //They will be added inside the struct for any variable with the name detected by findS()
-void enums() {
-    FSkip(-4);
-    if (fieldName == "GroupName_Role") {
-        enum {
-            role_Normal =  0,
-            role_Idle =  1,
-            role_SitFakeDead =  2,
-            role_LieFakeDead =  3,
-            role_Hypnotized =  4,
-            role_LieHypnotized =  5,
-            role_standingIdle =  6,
-            role_Eating =  7,
-            role_Special =  8,
-            role_BreakDownDoor =  9,
-            role_HangingFakeDead =  10,
-            role_SplitInHalf =  11,
-            role_Dead =  12,
-            role_DeadPosed =  13,
-            role_DeadPosed2 =  14,
-            role_DeadPosed3 =  15,
-        }GroupName_Role;
-    }
-    else if (findS(fieldName, "DamageType") != -1) {
-        enum { 
-            None = -1,
-            Minimum = 0,
-            NormalS = 1,
-            NormalL = 2,
-            NormalLL = 3,
-            Down = 4,
-            DownBound = 5,
-            Slam = 6,
-            SlamBound = 7,
-            Upper = 8,
-            HyperUpper = 9,
-            HyperUpperAir = 10,
-            Blown = 11,
-            Collapse = 12,
-            RollingUpper = 13,
-            CheckSpin = 14,
-            Spin = 15,
-            DiagonalBlown = 16,
-            WindS = 17,
-            WindL = 18,
-            SnatchRelase = 19,
-            StraightBlown = 20,
-            Tremor = 21,
-            Inhale = 22,
-            MotionContinue = 23,
-            Explosion = 24
-        } DamageType;
-    } else
-        FSkip(4);
-}
+#include "motfsmEnum.bt"
 
 //============================
 //Special functions & structs:
@@ -1176,6 +1124,7 @@ typedef struct(uint32 classHash, ubyte fieldIndex) {
     local ushort elementSize <hidden=true> = GetFieldSize(classHash, fieldIndex);
     local ubyte align <hidden=true> = GetFieldAlignment(classHash, fieldIndex);
     local ubyte isList <hidden=true> = GetFieldArrayState(classHash, fieldIndex);
+	local string fieldOrgTypeName <hidden=true> = GetFieldOrgTypeName(classHash, fieldIndex);
     local int varIdx <hidden=true> = -1;
     if (!finished && ShowAlignment) {
         varIdx = varLen;
@@ -1543,7 +1492,7 @@ typedef struct(uint32 classHash, ubyte fieldIndex) {
         if (elementSize > 16)
             FSeek(varStart + elementSize);
         else if (elementSize == 4 && exists(data) && startof(data)+4 <= FileSize() && ReadInt(startof(data)) <= 512)
-            enums();
+			if (ShowEnum) enums();
         if (!finished) {
             FSkip(-1);
             ubyte FieldNamer <read=ReadVariableNamer, write=WriteVariableName>;
@@ -3130,17 +3079,19 @@ else {
     } Header;
     FSkip(-1);
 }
-    
+
+    #include "TagsCollection.bt"
+	
     typedef struct {
         struct BHVTCount TagsCount(1); 
         if (!finished) {
             if (TagsCount.Count > 1) 
                 struct { 
                     for (i=0; i<TagsCount.Count; i++) 
-                        int Tags <format=hex>; 
+                        TagsCollection Tags <format=hex>; 
                 } Tags; 
             else if (TagsCount.Count == 1) 
-                int Tags <format=hex>;
+                TagsCollection Tags <format=hex>;
         } else {
             if (TagsCount.Count && TagsCount.Count < FileSize() && FTell() + TagsCount.Count * 4 < RSZOffset)
                 if (TagsCount.Count > 1) { 
@@ -5295,7 +5246,7 @@ typedef struct(BHVTlvl lv, string Name) {
     local string Name <hidden=true> = Name;
     local BHVTlvl Type <hidden=true> = lv;
     
-    int hash <format=hex>;
+    TagsCollection hash <format=hex>;
     if (finished && hash != -1 && hash != 0) {
         local short lvl <hidden=true> = getBHVTLevel(Type);
         if (Type == id_Transition) {
