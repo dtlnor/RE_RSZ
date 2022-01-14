@@ -148,7 +148,7 @@ void enums(){
 				} else
 					FSkip(4); //not CommandFsmWp
 			} 
-			else if (Strcmp(fieldName, "_ConditionWpEnum") == 0){
+			else if ((Strcmp(fieldName, "_ConditionWpEnum") == 0) || (Strcmp(fieldName, "_conditionWpEnum") == 0)) {
 				if (Strcmp(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandShortSword.CommandConditionWp") == 0) {
 					enum { 
 						PlayerFsm2CommandShortSword_CommandConditionWp_WpNone = 0,
@@ -258,7 +258,7 @@ void enums(){
 						PlayerFsm2CommandLongSword_CommandConditionWp_WpNone = 0,
 						PlayerFsm2CommandLongSword_CommandConditionWp_GaugeCheck = 1,
 						PlayerFsm2CommandLongSword_CommandConditionWp_GaugeLvCheck = 2,
-					} _ConditionWpEnum;
+					} _conditionWpEnum;
 				}
 				else if (Strcmp(fieldOrgTypeName, "snow.player.fsm.PlayerFsm2CommandLightBowgun.CommandConditionWp") == 0) {
 					enum { 
