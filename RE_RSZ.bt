@@ -52,7 +52,7 @@ uint64  GetFieldType(uint32 classHash, uint32 fieldIndex);
 ubyte   IsFieldNative(uint32 classHash, uint32 fieldIndex);
 #endlink
 
-#include "enums.hpp"
+//#include "enums.hpp"
 
 //Local variables:
 local int i <hidden=true>, j <hidden=true>, k <hidden=true>, m <hidden=true>, n <hidden=true>, o <hidden=true>, h <hidden=true>, temp <hidden=true>,
@@ -1137,7 +1137,6 @@ typedef struct(uint32 classHash, ubyte fieldIndex) {
     local ubyte isList <hidden=true> = GetFieldArrayState(classHash, fieldIndex);
 	local string fieldOrgTypeName <hidden=true> = GetFieldOrgTypeName(classHash, fieldIndex);
     local int varIdx <hidden=true> = -1;
-    local string fieldOrgTypeName <hidden=true> = GetFieldOrgTypeName(classHash, fieldIndex);
     
     if (!finished && ShowAlignment) {
         varIdx = varLen;
