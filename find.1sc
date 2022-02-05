@@ -11,18 +11,54 @@
 local int i;
 local int nodeCnt = BehaviorTree.NodeCount;
 
-string findHashListName(hashVal){
+#link "RSZParser.dll"
+ubyte   IsInitialized();
+void    ParseJson(string jsonPath);
+string  GetRSZClassName(uint32 classHash);
+uint32  GetFieldCount(uint32 classHash);
+uint32  GetFieldAlignment(uint32 classHash, uint32 fieldIndex);
+ubyte   GetFieldArrayState(uint32 classHash, uint32 fieldIndex);
+string  GetFieldName(uint32 classHash, uint32 fieldIndex);
+string  GetFieldTypeName(uint32 classHash, uint32 fieldIndex);
+string  GetFieldOrgTypeName(uint32 classHash, uint32 fieldIndex);
+uint32  GetFieldSize(uint32 classHash, uint32 fieldIndex);
+uint64  GetFieldType(uint32 classHash, uint32 fieldIndex);
+ubyte   IsFieldNative(uint32 classHash, uint32 fieldIndex);
+#endlink
+
+string findHashName(uint32 hashVal){
     if (!IsInitialized())
         ParseJson(JsonPath);
     local string className = GetRSZClassName(hashVal);
-    //Printf("%08X, %s\n",hashVal, className);
+    Printf("%08X, %s\n",hashVal, className);
     return className;
 }
 
-void findHashOcurAddr(uint32 HashID){
+findHashOcurAddr(0x25887C4B); //snow.PlayerPlayMotion2
+findHashOcurAddr(0xADA3CEC1); //snow.player.fsm.PlayerHitAction2
+//GetNodeIDByActionID(0x4950FCB6);
+
+//findHashName(0xADA3CEC1); //snow.player.fsm.PlayerHitAction2
+//findHashName(0x25887C4B); //snow.PlayerPlayMotion2
+/*
+findHashName(0xAE2A3140); //snow.player.fsm.PlayerFsm2ActionGreatSwordHitAction
+findHashName(0x9C966784); //snow.player.fsm.PlayerFsm2ActionLanceChargeHitAction
+findHashName(0x3B1FED4E); //snow.player.fsm.PlayerHitCommonAction2
+
+findHashName(0x7DD3D1DE); //snow.envCreature.EnvCreatureFsm2ActionHitSet
+findHashName(0xEB7A4709); //snow.envCreature.EnvCreatureFsm2ActionEc003HitSet
+
+findHashName(0xFA6B1BCC); //snow.player.fsm.PlayerHitAction2OverrideUsedHitAction
+findHashName(0xC9A96C7B); //snow.player.fsm.PlayerFsm2ActionIG_InsectHitAction
+findHashName(0x1A2E10B6); //snow.otomo.fsm.action.OtomoHitAction2
+findHashName(0xD5832A24); //snow.otomo.fsm.action.OtomoMultiHitAction
+*/
+
+void findHashOcurAddr(uint32 HashID){ //search occur of class name hash
     local TFindResults r;
     local uint i,j = 0;
     local int count=0;
+    local int actionID = 0;
     
     /*
         Actions = 0,
@@ -41,14 +77,73 @@ void findHashOcurAddr(uint32 HashID){
     //Printf("%d\n", RSZFile[0].RSZHeader.objectCount);
     
     for (i = 0; i < 11; i++) {
-	    if (RSZFile[i].RSZHeader.objectCount = 0) continue;
+	    if (RSZFile[i].RSZHeader.objectCount == 0) continue;
         for (j=0; j < RSZFile[i].RSZHeader.instanceCount; j++) {
-            if (HashID == RSZFile[i].RSZHeader.instanceInfos[j].Hash){
-			    searchOffset(i, HashID, j);
+            if (HashID == RSZFile[i].InstanceInfos.instanceInfo[j].typeId.Hash){
+			    //searchOffset(i, HashID, j);
+			    actionID = GetActionID(i, HashID, j);
+                Printf("RSZType[%d],HashID:%08X,instID:%d,actionID:%08X",i, HashID, j, actionID);
+                if (GetNodeIDByActionID(actionID) == 0)
+                    Printf(",Node[NaN]");
+                if (HashID == 0xADA3CEC1)
+                    PrintActionHitIndexAttr(i, HashID, j);
+                if (HashID == 0x25887C4B)
+                    PrintActionMotBankAttr(i, HashID, j);
+                Printf("\n");
+		        count++;
 		    }
-		    count++;
         }
-	    Printf("RSZFile[%d] count:%d\n",i, count);
+	    Printf("RSZFile[%d] FoundCount:%d\n",i, count);
+    }
+}
+
+uint GetActionID(uint RSZType, uint CHashID, uint instID){
+    //local int varItr = 0;
+    if (exists(RSZFile[RSZType].Data.RawData.RSZ[instID].var[1].data_As_Int))
+        return RSZFile[RSZType].Data.RawData.RSZ[instID].var[1].data_As_Int;
+    return RSZFile[RSZType].Data.RawData.RSZ[instID].var[1].data;
+}
+
+void PrintActionHitIndexAttr(uint RSZType, uint CHashID, uint instID){
+    //local int varItr = 0;
+    local uint hitIndex = RSZFile[RSZType].Data.RawData.RSZ[instID].var[2].data;
+    local uint workID = RSZFile[RSZType].Data.RawData.RSZ[instID].var[3].data;
+	Printf(",workID:%d,hitIndex:%d" ,workID, hitIndex);
+    
+}
+
+void PrintActionMotBankAttr(uint RSZType, uint CHashID, uint instID){
+    //local int varItr = 0;
+    local uint BankID = RSZFile[RSZType].Data.RawData.RSZ[instID].var[3].data;
+    local uint MotionID = RSZFile[RSZType].Data.RawData.RSZ[instID].var[4].data;
+	Printf(",BankID:%d,MotionID:%d" ,BankID, MotionID);
+    
+}
+
+uint GetNodeIDByActionID(uint ActionID){
+    local int varItr = 0;
+    local uint i,j = 0;
+    local int NodeCount = BehaviorTree.NodeCount;
+    local int ActionCount = 0;
+    local uint refActionID = 0;
+    local int occurCount = 0;
+    
+    for (i=0; i<NodeCount; i++){
+        if (exists(BehaviorTree.RawNodes.Node[i].Actions.ActionsCount.Count)){
+            //ActionCount = BehaviorTree.RawNodes.Node[i].Actions.ActionsCount.Count;
+            for (j=0;j<BehaviorTree.RawNodes.Node[i].Actions.ActionsCount.Count;j++){
+                //refActionID = BehaviorTree.RawNodes.Node[i].Actions.Action[j].Action.hash;
+                if (BehaviorTree.RawNodes.Node[i].Actions.Action[j].Action.hash == ActionID){
+	                Printf(",Node[%d],%s",i, BehaviorTree.RawNodes.Node[i].Name.String);
+                    //ReadBHVTHashName
+                    //BHVTHash
+                    occurCount++;
+                }
+            }
+        }
+    }
+    //BehaviorTree.RawNodes.Node[kk]
+    return occurCount;
 }
 
 int searchOffset(uint RSZType, uint ActType, uint instID){
@@ -79,7 +174,7 @@ int searchOffset(uint RSZType, uint ActType, uint instID){
             arrayByte =  (arrayByte << 32) + 0x40000000 + objectID;
             r = FindAll( arrayByte );
             isTrueFalsePair = 1;
-        }*/
+        }
         if (r.count == 0){ //try single
             isTrueFalsePair = 0;
             r = FindAll( (0x40000000 + objectID) );
