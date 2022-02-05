@@ -1,0 +1,123 @@
+//------------------------------------------------
+//--- 010 Editor v12.0.1 Script File
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+//   History: 
+//------------------------------------------------
+local int i;
+local int nodeCnt = BehaviorTree.NodeCount;
+
+string findHashListName(hashVal){
+    if (!IsInitialized())
+        ParseJson(JsonPath);
+    local string className = GetRSZClassName(hashVal);
+    //Printf("%08X, %s\n",hashVal, className);
+    return className;
+}
+
+void findHashOcurAddr(uint32 HashID){
+    local TFindResults r;
+    local uint i,j = 0;
+    local int count=0;
+    
+    /*
+        Actions = 0,
+        Selectors = 1,
+        SelectorCallers = 2,
+        Conditions = 3,
+        TransitionEvents = 4,
+        ExpressionTreeConditions = 5,
+        StaticActions = 6,
+        StaticSelectorCallers = 7,
+        StaticConditions = 8,
+        StaticTransitionEvents = 9,
+        StaticExpressionTreeConditions = 10,
+    */
+    
+    //Printf("%d\n", RSZFile[0].RSZHeader.objectCount);
+    
+    for (i = 0; i < 11; i++) {
+	    if (RSZFile[i].RSZHeader.objectCount = 0) continue;
+        for (j=0; j < RSZFile[i].RSZHeader.instanceCount; j++) {
+            if (HashID == RSZFile[i].RSZHeader.instanceInfos[j].Hash){
+			    searchOffset(i, HashID, j);
+		    }
+		    count++;
+        }
+	    Printf("RSZFile[%d] count:%d\n",i, count);
+}
+
+int searchOffset(uint RSZType, uint ActType, uint instID){
+    local uint k = 0;
+    local int objectID = -1;
+    local int isTrueFalsePair = 0;
+    local int returnTrueFalsePair = 0;
+    local int isSingle = 0;
+    for (k = 0; k < RSZFile[RSZType].RSZHeader.objectCount; k++){
+        if(RSZFile[RSZType].ObjectTable[k] == instID){
+            objectID = k;
+            break;
+        }
+    }
+    if (objectID >= 0){
+        local uint32 arrayByte = objectID;
+        if (RSZType > 5) arrayByte = (arrayByte + 0x40000000);
+
+        local TFindResults r;
+        r = FindAll( arrayByte );
+        if (r.count == 0){ //try swape pair
+            arrayByte = swapSet32(arrayByte);
+            r = FindAll( arrayByte );
+        }
+        if (r.count == 0){ //try true false pair
+            arrayByte = swapSet32(arrayByte);
+            arrayByte = 0x40000000+objectID+1;
+            arrayByte =  (arrayByte << 32) + 0x40000000 + objectID;
+            r = FindAll( arrayByte );
+            isTrueFalsePair = 1;
+        }*/
+        if (r.count == 0){ //try single
+            isTrueFalsePair = 0;
+            r = FindAll( (0x40000000 + objectID) );
+            isSingle = 1;
+        }
+        if (r.count > 1){
+            Printf("Duplicated: %016LX, %d, instID: %d, objID: %d\n",arrayByte, r.count, instID, objectID);
+            local int k = 0;
+            for (k = 0; k < r.count; k++){
+                Printf("%Ld\n", r.start[k]);
+            }
+        }else if (r.count <= 0){
+            Printf("Object not found: %016LX, %d, instID: %d, objID: %d\n",arrayByte, r.count, instID, objectID);
+        }else if ( r.start[0] < boundStart || r.start[0] > boundEnd){ 
+            Printf("Target out of bound, instID: %d\n",instID);
+        }else { 
+            // All fine
+            if (isTrueFalsePair)  returnTrueFalsePair = 1;
+            if (isSingle) {
+                switch(ActType){
+                    case AHash: {Printf( "A "); if (EnableA) { WriteUInt(r.start[0], 0xFFFFFFFF); Printf( "<> "); } }break;
+                    case BHash: {Printf( "B "); if (EnableB) { WriteUInt(r.start[0], 0xFFFFFFFF); Printf( "<> "); } }break;
+                    case CHash: {Printf( "C "); if (EnableC) { WriteUInt(r.start[0], 0xFFFFFFFF); Printf( "<> "); } }break;
+                    default : Printf( "F "); break;
+                }
+                Printf( "%Ld %08X\n", r.start[0], (0x40000000 + objectID) );
+            }else {
+                switch(ActType){
+                    case AHash: {Printf( "A "); if (EnableA) { WriteUInt64(r.start[0], swapSet32(arrayByte)); Printf( "<> "); } }break;
+                    case BHash: {Printf( "B "); if (EnableB) { WriteUInt64(r.start[0], swapSet32(arrayByte)); Printf( "<> "); } }break;
+                    case CHash: {Printf( "C "); if (EnableC) { WriteUInt64(r.start[0], swapSet32(arrayByte)); Printf( "<> "); } }break;
+                    default : Printf( "F "); break;
+                }
+                Printf( "%Ld %016LX\n", r.start[0], arrayByte );
+            }
+        }
+    }else{
+        Printf("Object not found: %016LX, %d, instID: %d, objID: %d\n",arrayByte, r.count, instID, objectID);
+    }
+    return returnTrueFalsePair;
+}
