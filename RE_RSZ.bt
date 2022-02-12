@@ -53,6 +53,7 @@ ubyte   IsFieldNative(uint32 classHash, uint32 fieldIndex);
 #endlink
 
 //#include "enums.hpp"
+#include "motfsmEnum.bt"
 
 //Local variables:
 local int i <hidden=true>, j <hidden=true>, k <hidden=true>, m <hidden=true>, n <hidden=true>, o <hidden=true>, h <hidden=true>, temp <hidden=true>,
@@ -134,11 +135,6 @@ if (AutoDetectGame) {
 Local_Directory = Lower(Local_Directory);
 local string JsonPath<hidden=true> = Lower(FileNameGetPath(GetTemplateFileName()) + "RSZ" + RSZVersion + ".json"); 
 ParseJson(JsonPath);
-
-//===========================
-//Create your own enums here:
-//They will be added inside the struct for any variable with the name detected by findS()
-#include "motfsmEnum.bt"
 
 //============================
 //Special functions & structs:
@@ -1135,8 +1131,8 @@ typedef struct(uint32 classHash, ubyte fieldIndex) {
     local ushort elementSize <hidden=true> = GetFieldSize(classHash, fieldIndex);
     local ubyte align <hidden=true> = GetFieldAlignment(classHash, fieldIndex);
     local ubyte isList <hidden=true> = GetFieldArrayState(classHash, fieldIndex);
-	local string fieldOrgTypeName <hidden=true> = GetFieldOrgTypeName(classHash, fieldIndex);
     local int varIdx <hidden=true> = -1;
+    local string fieldOrgTypeName <hidden=true> = GetFieldOrgTypeName(classHash, fieldIndex);
     
     if (!finished && ShowAlignment) {
         varIdx = varLen;
