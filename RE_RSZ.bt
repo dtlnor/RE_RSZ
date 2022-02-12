@@ -19,7 +19,7 @@ local int       UseSpacers       <hidden=true>        = TRUE;                   
 local int       AutoDetectGame   <hidden=true>        = TRUE;                      //Automatically detect RSZVersion based on the name + ext of the file being viewed
 local int       RedetectBHVT     <hidden=true>        = TRUE;                      //Will automatically redetect the next BHVT node if there is a problem 
 local int       HideRawData      <hidden=true>        = FALSE;                     //Hides RawData struct
-local int       HideRawNodes     <hidden=true>        = FALSE;                      //Hides RawNodes struct
+local int       HideRawNodes     <hidden=true>        = TRUE;                      //Hides RawNodes struct
 local int       SortRequestSets  <hidden=true>        = TRUE;                      //Sorts RCOL RequestSets by their IDs
 local int       ExposeUserDatas  <hidden=true>        = TRUE;                      //Makes RSZFiles that contain embedded userDatas start after the Userdatas, for ctrl+J
 local int       SeekByGameObject <hidden=true>        = TRUE;                      //Will automatically seek between detected GameObjects to fix reading errors

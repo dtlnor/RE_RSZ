@@ -8,36 +8,24 @@
 //  Category: 
 //   History: 
 //------------------------------------------------
-local int i;
-local int nodeCnt = BehaviorTree.NodeCount;
 
-#link "RSZParser.dll"
-ubyte   IsInitialized();
-void    ParseJson(string jsonPath);
-string  GetRSZClassName(uint32 classHash);
-uint32  GetFieldCount(uint32 classHash);
-uint32  GetFieldAlignment(uint32 classHash, uint32 fieldIndex);
-ubyte   GetFieldArrayState(uint32 classHash, uint32 fieldIndex);
-string  GetFieldName(uint32 classHash, uint32 fieldIndex);
-string  GetFieldTypeName(uint32 classHash, uint32 fieldIndex);
-string  GetFieldOrgTypeName(uint32 classHash, uint32 fieldIndex);
-uint32  GetFieldSize(uint32 classHash, uint32 fieldIndex);
-uint64  GetFieldType(uint32 classHash, uint32 fieldIndex);
-ubyte   IsFieldNative(uint32 classHash, uint32 fieldIndex);
-#endlink
+//------------------------------------------------
+// command here
+//------------------------------------------------
 
-string findHashName(uint32 hashVal){
-    if (!IsInitialized())
-        ParseJson(JsonPath);
-    local string className = GetRSZClassName(hashVal);
-    Printf("%08X, %s\n",hashVal, className);
-    return className;
-}
+// print mmh by type name
+//hash_8("snow.player.fsm.PlayerFsm2ActionHunterWire");
 
-findHashOcurAddr(0x25887C4B); //snow.PlayerPlayMotion2
-findHashOcurAddr(0xADA3CEC1); //snow.player.fsm.PlayerHitAction2
-//GetNodeIDByActionID(0x4950FCB6);
+// print parent node which ref to this node
+searchNodePredecessor(261);
 
+// print node info who ref to this action(by its type mmh)
+//findHashOcurAddr(556540062); //*snow.player.fsm.PlayerFsm2ActionHunterWire[7853] 556540062
+//findHashOcurAddr(0x25887C4B); //snow.PlayerPlayMotion2
+//findHashOcurAddr(0xADA3CEC1); //snow.player.fsm.PlayerHitAction2
+//findHashOcurAddr(0xEA5D2BC6); //snow.player.fsm.PlayerHitAction2
+
+// get type name by type mmh
 //findHashName(0xADA3CEC1); //snow.player.fsm.PlayerHitAction2
 //findHashName(0x25887C4B); //snow.PlayerPlayMotion2
 /*
@@ -54,11 +42,76 @@ findHashName(0x1A2E10B6); //snow.otomo.fsm.action.OtomoHitAction2
 findHashName(0xD5832A24); //snow.otomo.fsm.action.OtomoMultiHitAction
 */
 
+//------------------------------------------------
+// script below
+//------------------------------------------------
+local int i;
+local int nodeCnt = BehaviorTree.NodeCount;
+
+string findHashName(uint32 hashVal){
+    if (!IsInitialized())
+        ParseJson(JsonPath);
+    local string className = GetRSZClassName(hashVal);
+    Printf("%08X, %s\n",hashVal, className);
+    return className;
+}
+
+uint32 hash_8(string key){
+    local uint64 it<hidden=true>;
+    local const uint length = Strlen(key);
+    if (length) {
+        local byte key_array[length];
+        for(it = 0; it < length; it += 1){
+            key_array[it] = key[it];
+        }
+        Printf("%08Xh\n",mmh3(key_array, length, 0xFFFFFFFF));
+        return mmh3(key_array, length, 0xFFFFFFFF);
+    } return 0;
+}
+
+
+uint32 searchNodePredecessor(uint32 NodeID){
+    local int varItr = 0;
+    local uint i,j = 0;
+    local int NodeCount = BehaviorTree.NodeCount;
+    local int ActionCount = 0;
+    local uint refActionID = 0;
+    local int occurCount = 0;
+    local uint BHVTHashID = BehaviorTree.RawNodes.Node[NodeID].ID.hash;
+    
+
+    for (i=0; i<NodeCount; i++){
+        if (exists(BehaviorTree.RawNodes.Node[i].Transitions.Transition.mStartState.hash)){
+            if (BehaviorTree.RawNodes.Node[i].Transitions.Transition.mStartState.hash == BHVTHashID){
+	            Printf("Node[%d](T),%s\n",i, BehaviorTree.RawNodes.Node[i].Name.String);
+                //ReadBHVTHashName
+                //BHVTHash
+                occurCount++;
+            }
+        }
+        if (exists(BehaviorTree.RawNodes.Node[i].States.StatesCount.Count)){
+            //ActionCount = BehaviorTree.RawNodes.Node[i].Actions.ActionsCount.Count;
+            for (j=0;j<BehaviorTree.RawNodes.Node[i].States.StatesCount.Count;j++){
+                //refActionID = BehaviorTree.RawNodes.Node[i].Actions.Action[j].Action.hash;
+                if (BehaviorTree.RawNodes.Node[i].States.State[j].mTransitions.hash == BHVTHashID){
+	                Printf("Node[%d](S),%s\n",i, BehaviorTree.RawNodes.Node[i].Name.String);
+                    //ReadBHVTHashName
+                    //BHVTHash
+                    occurCount++;
+                }
+            }
+        }
+    }
+    //BehaviorTree.RawNodes.Node[kk]
+    return occurCount;
+}
+
 void findHashOcurAddr(uint32 HashID){ //search occur of class name hash
     local TFindResults r;
     local uint i,j = 0;
     local int count=0;
     local int actionID = 0;
+    local int objectID = -1;
     
     /*
         Actions = 0,
@@ -82,19 +135,35 @@ void findHashOcurAddr(uint32 HashID){ //search occur of class name hash
             if (HashID == RSZFile[i].InstanceInfos.instanceInfo[j].typeId.Hash){
 			    //searchOffset(i, HashID, j);
 			    actionID = GetActionID(i, HashID, j);
-                Printf("RSZType[%d],HashID:%08X,instID:%d,actionID:%08X",i, HashID, j, actionID);
+                objectID = searchObjByInst(i, j);
+                Printf("RSZType[%d],typeHash:%08X,instIdx:%d,objIdx:%d,BHVTHash[actionID]:%08X",i, HashID, j, objectID, actionID);
                 if (GetNodeIDByActionID(actionID) == 0)
                     Printf(",Node[NaN]");
                 if (HashID == 0xADA3CEC1)
                     PrintActionHitIndexAttr(i, HashID, j);
                 if (HashID == 0x25887C4B)
                     PrintActionMotBankAttr(i, HashID, j);
+                if (HashID == 556540062)
+                    PrintWireAttr(i, HashID, j);
                 Printf("\n");
 		        count++;
 		    }
         }
 	    Printf("RSZFile[%d] FoundCount:%d\n",i, count);
     }
+}
+
+int searchObjByInst(uint RSZType, uint instID){
+
+    local uint k = 0;
+    local int objectID = -1;
+    for (k = 0; k < RSZFile[RSZType].RSZHeader.objectCount; k++){
+        if(RSZFile[RSZType].ObjectTable[k] == instID){
+            objectID = k;
+            return objectID;
+        }
+    }
+    return -1;
 }
 
 uint GetActionID(uint RSZType, uint CHashID, uint instID){
@@ -109,6 +178,14 @@ void PrintActionHitIndexAttr(uint RSZType, uint CHashID, uint instID){
     local uint hitIndex = RSZFile[RSZType].Data.RawData.RSZ[instID].var[2].data;
     local uint workID = RSZFile[RSZType].Data.RawData.RSZ[instID].var[3].data;
 	Printf(",workID:%d,hitIndex:%d" ,workID, hitIndex);
+    
+}
+
+void PrintWireAttr(uint RSZType, uint CHashID, uint instID){
+    //local int varItr = 0;
+    local uint useNum = RSZFile[RSZType].Data.RawData.RSZ[instID].var[2].data;
+    local uint recastTime = RSZFile[RSZType].Data.RawData.RSZ[instID].var[3].data;
+	Printf(",useNum:%d,recastTime:%d" ,useNum, recastTime);
     
 }
 
@@ -146,7 +223,8 @@ uint GetNodeIDByActionID(uint ActionID){
     return occurCount;
 }
 
-int searchOffset(uint RSZType, uint ActType, uint instID){
+// deprecated
+int searchSwitchActionOffset(uint RSZType, uint ActType, uint instID){
     local uint k = 0;
     local int objectID = -1;
     local int isTrueFalsePair = 0;
@@ -215,4 +293,50 @@ int searchOffset(uint RSZType, uint ActType, uint instID){
         Printf("Object not found: %016LX, %d, instID: %d, objID: %d\n",arrayByte, r.count, instID, objectID);
     }
     return returnTrueFalsePair;
+}
+
+//from re_rsz
+uint32 mmh3 (byte key[], uint32 length , uint32 seed){
+    local uint64 block_start<hidden=true>;
+    local const uint nBlocks = length / 4;
+    local uint32 h1 = seed;
+    
+    local const uint32 c1 = 0xcc9e2d51;
+    local const uint32 c2 = 0x1b873593;
+
+    local uint32 k1;
+    for(block_start = 0; block_start < nBlocks * 4; block_start+= 4){
+        k1 = (uint32)key[block_start + 3] << 24 | \
+             (uint32)key[block_start + 2] << 16 | \
+             (uint32)key[block_start + 1] << 8 | \
+             (uint32)key[block_start + 0];
+
+        k1 = (c1 * k1) & 0xFFFFFFFF;
+        k1 = (k1 << 15 | k1 >> 17) & 0xFFFFFFFF;
+        k1 = (c2 * k1) & 0xFFFFFFFF;
+
+        h1 ^= k1;
+        h1 = (h1 << 13 | h1 >> 19) & 0xFFFFFFFF;
+        h1 = (h1 * 5 + 0xe6546b64) & 0xFFFFFFFF;
+    }
+
+    local uint32 tail_index = nBlocks * 4;
+    k1 = 0;
+    local uint32 tail_size = length & 3;
+
+    if(tail_size >= 3)
+        k1 ^= (uint32)key[tail_index + 2] << 16;
+    if(tail_size >= 2)
+        k1 ^= (uint32)key[tail_index + 1] << 8;
+    if(tail_size >= 1)
+        k1 ^= (uint32)key[tail_index + 0];
+
+    if(tail_size > 0){
+        k1 = (k1 * c1) & 0xFFFFFFFF;
+        k1 = (k1 << 15 | k1 >> 17) & 0xFFFFFFFF;
+        k1 = (k1 * c2) & 0xFFFFFFFF;
+        h1 ^= k1;
+    }
+
+    return fmix32(h1 ^ length);
 }
