@@ -14,7 +14,7 @@
 //------------------------------------------------
 
 // print mmh by type name
-//hash_8("snow.player.fsm.PlayerFsm2ActionHunterWire");
+hash_8("snow.player.fsm.PlayerFsm2ActionHunterWire");
 
 // print parent node which ref to this node
 searchNodePredecessor(261);
@@ -23,7 +23,7 @@ searchNodePredecessor(261);
 //findHashOcurAddr(556540062); //*snow.player.fsm.PlayerFsm2ActionHunterWire[7853] 556540062
 //findHashOcurAddr(0x25887C4B); //snow.PlayerPlayMotion2
 //findHashOcurAddr(0xADA3CEC1); //snow.player.fsm.PlayerHitAction2
-//findHashOcurAddr(0xEA5D2BC6); //snow.player.fsm.PlayerHitAction2
+findHashOcurAddr(0xEA5D2BC6); //event(TransitionEvents)
 
 // get type name by type mmh
 //findHashName(0xADA3CEC1); //snow.player.fsm.PlayerHitAction2
@@ -134,17 +134,17 @@ void findHashOcurAddr(uint32 HashID){ //search occur of class name hash
         for (j=0; j < RSZFile[i].RSZHeader.instanceCount; j++) {
             if (HashID == RSZFile[i].InstanceInfos.instanceInfo[j].typeId.Hash){
 			    //searchOffset(i, HashID, j);
-			    actionID = GetActionID(i, HashID, j);
+			    actionID = GetRSZVarAsUint(i, HashID, j, 1);
                 objectID = searchObjByInst(i, j);
                 Printf("RSZType[%d],typeHash:%08X,instIdx:%d,objIdx:%d,BHVTHash[actionID]:%08X",i, HashID, j, objectID, actionID);
                 if (GetNodeIDByActionID(actionID) == 0)
                     Printf(",Node[NaN]");
                 if (HashID == 0xADA3CEC1)
-                    PrintActionHitIndexAttr(i, HashID, j);
+	                Printf(",workID:%d,hitIndex:%d" ,GetRSZVarAsUint(i, HashID, j, 3), GetRSZVarAsUint(i, HashID, j, 2));
                 if (HashID == 0x25887C4B)
-                    PrintActionMotBankAttr(i, HashID, j);
+                    Printf(",BankID:%d,MotionID:%d" ,GetRSZVarAsUint(i, HashID, j, 3), GetRSZVarAsUint(i, HashID, j, 4));
                 if (HashID == 556540062)
-                    PrintWireAttr(i, HashID, j);
+	                Printf(",useNum:%d,recastTime:%d" ,GetRSZVarAsUint(i, HashID, j, 2), GetRSZVarAsUint(i, HashID, j, 3));
                 Printf("\n");
 		        count++;
 		    }
@@ -166,35 +166,11 @@ int searchObjByInst(uint RSZType, uint instID){
     return -1;
 }
 
-uint GetActionID(uint RSZType, uint CHashID, uint instID){
+uint GetRSZVarAsUint(uint RSZType, uint CHashID, uint instID, uint varIdx){
     //local int varItr = 0;
-    if (exists(RSZFile[RSZType].Data.RawData.RSZ[instID].var[1].data_As_Int))
-        return RSZFile[RSZType].Data.RawData.RSZ[instID].var[1].data_As_Int;
-    return RSZFile[RSZType].Data.RawData.RSZ[instID].var[1].data;
-}
-
-void PrintActionHitIndexAttr(uint RSZType, uint CHashID, uint instID){
-    //local int varItr = 0;
-    local uint hitIndex = RSZFile[RSZType].Data.RawData.RSZ[instID].var[2].data;
-    local uint workID = RSZFile[RSZType].Data.RawData.RSZ[instID].var[3].data;
-	Printf(",workID:%d,hitIndex:%d" ,workID, hitIndex);
-    
-}
-
-void PrintWireAttr(uint RSZType, uint CHashID, uint instID){
-    //local int varItr = 0;
-    local uint useNum = RSZFile[RSZType].Data.RawData.RSZ[instID].var[2].data;
-    local uint recastTime = RSZFile[RSZType].Data.RawData.RSZ[instID].var[3].data;
-	Printf(",useNum:%d,recastTime:%d" ,useNum, recastTime);
-    
-}
-
-void PrintActionMotBankAttr(uint RSZType, uint CHashID, uint instID){
-    //local int varItr = 0;
-    local uint BankID = RSZFile[RSZType].Data.RawData.RSZ[instID].var[3].data;
-    local uint MotionID = RSZFile[RSZType].Data.RawData.RSZ[instID].var[4].data;
-	Printf(",BankID:%d,MotionID:%d" ,BankID, MotionID);
-    
+    if (exists(RSZFile[RSZType].Data.RawData.RSZ[instID].var[varIdx].data_As_Int))
+        return RSZFile[RSZType].Data.RawData.RSZ[instID].var[varIdx].data_As_Int;
+    return RSZFile[RSZType].Data.RawData.RSZ[instID].var[varIdx].data;
 }
 
 uint GetNodeIDByActionID(uint ActionID){
