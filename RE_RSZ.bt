@@ -3218,7 +3218,7 @@ else {
     
     typedef struct {
         FSeek(pos);
-        struct BHVTId mStates(id_All, "", 1); 
+        struct BHVTId mStates(id_TransitionEvents, "", 1); 
         pos = FTell();
         for (j=mm+1; j<StatesCount.Count; j++)
             fakeStateList();
@@ -5404,8 +5404,8 @@ typedef struct(BHVTlvl lv, string Name, ubyte isList) {
         ushort id;
         ubyte ukn;
         ubyte idType;
-        if (idType == 64 && Type == id_Conditions)
-            Type = id_StaticConditions;
+        if (idType == 64 && Type >= 0 && Type <= 5)
+            Type += 5; // to static version
         
         if (finished && (id > -1 || (id == 0 && idType == 64))) {
             local short lvl <hidden=true> = getBHVTLevel(Type);

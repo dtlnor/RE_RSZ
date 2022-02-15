@@ -22,8 +22,8 @@ searchNodePredecessor(261);
 // print node info who ref to this action(by its type mmh)
 //findHashOcurAddr(556540062); //*snow.player.fsm.PlayerFsm2ActionHunterWire[7853] 556540062
 //findHashOcurAddr(0x25887C4B); //snow.PlayerPlayMotion2
-//findHashOcurAddr(0xADA3CEC1); //snow.player.fsm.PlayerHitAction2
-findHashOcurAddr(0xEA5D2BC6); //event(TransitionEvents)
+findHashOcurAddr(0xADA3CEC1); //snow.player.fsm.PlayerHitAction2
+//findHashOcurAddr(0xEA5D2BC6); //event(TransitionEvents)
 
 // get type name by type mmh
 //findHashName(0xADA3CEC1); //snow.player.fsm.PlayerHitAction2
@@ -110,15 +110,16 @@ void findHashOcurAddr(uint32 HashID){ //search occur of class name hash
     local TFindResults r;
     local uint i,j = 0;
     local int count=0;
-    local int actionID = 0;
+    local uint instance_BHVTHash = 0;
+    local int enable = 0;
     local int objectID = -1;
     
     /*
-        Actions = 0,
+        Actions = 0, // in action
         Selectors = 1,
         SelectorCallers = 2,
-        Conditions = 3,
-        TransitionEvents = 4,
+        Conditions = 3, // in transition / states
+        TransitionEvents = 4, // in transition / states - mstates
         ExpressionTreeConditions = 5,
         StaticActions = 6,
         StaticSelectorCallers = 7,
@@ -134,17 +135,44 @@ void findHashOcurAddr(uint32 HashID){ //search occur of class name hash
         for (j=0; j < RSZFile[i].RSZHeader.instanceCount; j++) {
             if (HashID == RSZFile[i].InstanceInfos.instanceInfo[j].typeId.Hash){
 			    //searchOffset(i, HashID, j);
-			    actionID = GetRSZVarAsUint(i, HashID, j, 1);
                 objectID = searchObjByInst(i, j);
-                Printf("RSZType[%d],typeHash:%08X,instIdx:%d,objIdx:%d,BHVTHash[actionID]:%08X",i, HashID, j, objectID, actionID);
-                if (GetNodeIDByActionID(actionID) == 0)
-                    Printf(",Node[NaN]");
-                if (HashID == 0xADA3CEC1)
-	                Printf(",workID:%d,hitIndex:%d" ,GetRSZVarAsUint(i, HashID, j, 3), GetRSZVarAsUint(i, HashID, j, 2));
-                if (HashID == 0x25887C4B)
-                    Printf(",BankID:%d,MotionID:%d" ,GetRSZVarAsUint(i, HashID, j, 3), GetRSZVarAsUint(i, HashID, j, 4));
-                if (HashID == 556540062)
-	                Printf(",useNum:%d,recastTime:%d" ,GetRSZVarAsUint(i, HashID, j, 2), GetRSZVarAsUint(i, HashID, j, 3));
+                Printf("RSZType[%d],typeHash:%08X,instIdx:%d,objIdx:%d",i, HashID, j, objectID);
+                if (i == id_Actions || i == id_StaticActions){
+			        instance_BHVTHash = GetRSZVarAsUint(i, HashID, j, 1);
+			        enable = GetRSZVarAsUint(i, HashID, j, 0);
+
+                    Printf(",BHVTHash(%d):%08X", enable, instance_BHVTHash);
+                    if (GetNodeIDByActionID(instance_BHVTHash) == 0)
+                        Printf(",Node[NaN]");
+                    if (HashID == 0xADA3CEC1)
+	                    Printf(",workID:%d,hitIndex:%d" ,GetRSZVarAsUint(i, HashID, j, 3), GetRSZVarAsUint(i, HashID, j, 2));
+                    if (HashID == 0x25887C4B)
+                        Printf(",BankID:%d,MotionID:%d" ,GetRSZVarAsUint(i, HashID, j, 3), GetRSZVarAsUint(i, HashID, j, 4));
+                    if (HashID == 556540062)
+	                    Printf(",useNum:%d,recastTime:%d" ,GetRSZVarAsUint(i, HashID, j, 2), GetRSZVarAsUint(i, HashID, j, 3));
+
+                } else if (i == id_Selectors) {
+			        Printf("selector\n");
+                    break;
+                } else if (i == id_Conditions || i == id_StaticConditions) {
+			        instance_BHVTHash = GetRSZVarAsUint(i, HashID, j, 0);
+			        enable = GetRSZVarAsUint(i, HashID, j, 2);
+                    
+                    Printf(",BHVTHash(%d):%08X", enable, instance_BHVTHash);
+
+                } else if (i == id_TransitionEvents || i == id_StaticTransitionEvents) {
+			        instance_BHVTHash = GetRSZVarAsUint(i, HashID, j, 0);
+			        enable = GetRSZVarAsUint(i, HashID, j, 1);
+                    
+                    Printf(",BHVTHash(%d):%08X", enable, instance_BHVTHash);
+
+                } else if (i == id_ExpressionTreeConditions || i == id_StaticExpressionTreeConditions) {
+			        instance_BHVTHash = GetRSZVarAsUint(i, HashID, j, 0);
+			        enable = GetRSZVarAsUint(i, HashID, j, 2);
+                    
+                    Printf(",BHVTHash(%d):%08X", enable, instance_BHVTHash);
+
+                }
                 Printf("\n");
 		        count++;
 		    }
