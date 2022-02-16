@@ -3203,7 +3203,7 @@ else {
             struct BHVTHash mStartTransitionEvent(id_All, "");          
             FSkip(4 * TransitionCount.Count - 4);
         }
-        if (detectedHash(FTell()) && ReadUByte(FTell()+2) != 0) 
+        if (detectedHash(FTell()) /*&& ReadUByte(FTell()+2) != 0*/) // there are hash zero at [3]
             struct BHVTHash mStartState(id_All, "");
         else
             struct BHVTId mStartState(id_All, "", 0);
@@ -5407,7 +5407,7 @@ typedef struct(BHVTlvl lv, string Name, ubyte isList) {
         if (idType == 64 && Type >= 0 && Type <= 5)
             Type += 5; // to static version
         
-        if (finished && (id > -1 || (id == 0 && idType == 64))) {
+        if (finished && (id > -1 || (id == 0 && idType == 64))) { // as id is unsigned, it should be > -1, so it is if (finished)
             local short lvl <hidden=true> = getBHVTLevel(Type);
 
             if (lvl > -1 && exists(RSZFile[lvl].ObjectTable[id]) && exists(RSZFile[lvl].Data.RawData.RSZ[RSZFile[lvl].ObjectTable[id]])) { //
