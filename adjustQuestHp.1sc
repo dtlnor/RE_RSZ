@@ -212,7 +212,146 @@ void questRead() {
 
 }
 
-questRead();
+
+void subspawn(int target) {
+    local int baseClass_obj_idx = RSZFile[0].ObjectTable[0]; //object index of base List containing all data
+	local int DataCount = RSZFile[0].Data.RawData.RSZ[baseClass_obj_idx].var[1].Count; //var[0] = first fleid
+	local int DataItem_obj_idx = 0; // object index of item in base List for looping
+	local int DataItem_field = 0; // temp var for looping
+	local int i = 0;
+	local int j = 0;
+	local int k = 0;
+
+    local int areaCount[18] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    local int uniID[18] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    local float angle[18] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    local struct {
+       float vec3[3] = {0,0,0};
+    } targetPos[18];
+
+    local int _BlockNo = 0;
+    local int  _UniqueID = 0;
+    local float _Radius = 0;
+    local int _PosType = 0;
+    local float _Angle = 0;
+
+    Printf("items count in base list: %d\n", DataCount);
+	Printf("Map: %d\n", RSZFile[0].Data.RawData.RSZ[baseClass_obj_idx].var[0].data); //var[0] = first fleid); 
+
+    // get value
+	for (i = 0; i < DataCount; i++){ // for each item in base List
+		DataItem_obj_idx = RSZFile[0].Data.RawData.RSZ[baseClass_obj_idx].var[1].var[i].ObjectIndex;
+		//Printf("%d\n", DataItem_obj_idx); // object index
+        _BlockNo = RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[0].data; // QuestNo // var[0]
+        Printf("%d-", _BlockNo);
+        _UniqueID = RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[1].data; // QuestNo // var[0]
+        Printf("%d-", _UniqueID);
+        _Radius = RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[4].data; // QuestNo // var[0]
+        Printf("%g-", _Radius);
+        _PosType = RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[5].data; // QuestNo // var[0]
+        Printf("%d-", _PosType);
+        _Angle = RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[6].data; // QuestNo // var[0]
+        Printf("%g-\n", _Angle);
+        areaCount[_BlockNo] += 1;
+        if (areaCount[_BlockNo] == target) {
+            targetPos[_BlockNo].vec3[0] = RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[2].data[0];
+            targetPos[_BlockNo].vec3[1] = RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[2].data[1];
+            targetPos[_BlockNo].vec3[2] = RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[2].data[2];
+            uniID[_BlockNo] = RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[1].data; // QuestNo // var[0]
+            angle[_BlockNo] = RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[6].data; // QuestNo // var[0]
+        }
+	}
+    for (i = 0; i < 18; i++){ // show data
+        Printf("area-%d = %d, pos = (%g,%g,%g)\n", i, areaCount[i], targetPos[i].vec3[0], targetPos[i].vec3[1], targetPos[i].vec3[2]);
+    }
+
+    //apply change
+	for (i = 0; i < DataCount; i++){ // for each item in base List
+		DataItem_obj_idx = RSZFile[0].Data.RawData.RSZ[baseClass_obj_idx].var[1].var[i].ObjectIndex;
+		//Printf("%d\n", DataItem_obj_idx); // object index
+        _BlockNo = RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[0].data; // QuestNo // var[0]
+        //Printf("%d\n", _BlockNo);
+        if (areaCount[_BlockNo] >= target) { //actually use to check 4th only, if its 4th, leave others random
+            RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[2].data[0] = targetPos[_BlockNo].vec3[0];
+            RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[2].data[1] = targetPos[_BlockNo].vec3[1];
+            RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[2].data[2] = targetPos[_BlockNo].vec3[2];
+            //RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[1].data = uniID[_BlockNo];
+            RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[6].data = angle[_BlockNo];
+        }
+	}
+
+}
+
+void subspawn(int target) {
+    local int baseClass_obj_idx = RSZFile[0].ObjectTable[0]; //object index of base List containing all data
+	local int DataCount = RSZFile[0].Data.RawData.RSZ[baseClass_obj_idx].var[1].Count; //var[0] = first fleid
+	local int DataItem_obj_idx = 0; // object index of item in base List for looping
+	local int DataItem_field = 0; // temp var for looping
+	local int i = 0;
+	local int j = 0;
+	local int k = 0;
+
+    local int areaCount[18] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    local int uniID[18] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    local float angle[18] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    local struct {
+       float vec3[3] = {0,0,0};
+    } targetPos[18];
+
+    local int _BlockNo = 0;
+    local int  _UniqueID = 0;
+    local float _Radius = 0;
+    local int _PosType = 0;
+    local float _Angle = 0;
+
+    Printf("items count in base list: %d\n", DataCount);
+	Printf("Map: %d\n", RSZFile[0].Data.RawData.RSZ[baseClass_obj_idx].var[0].data); //var[0] = first fleid); 
+
+    // get value
+	for (i = 0; i < DataCount; i++){ // for each item in base List
+		DataItem_obj_idx = RSZFile[0].Data.RawData.RSZ[baseClass_obj_idx].var[1].var[i].ObjectIndex;
+		//Printf("%d\n", DataItem_obj_idx); // object index
+        _BlockNo = RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[0].data; // QuestNo // var[0]
+        Printf("%d-", _BlockNo);
+        _UniqueID = RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[1].data; // QuestNo // var[0]
+        Printf("%d-", _UniqueID);
+        _Radius = RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[4].data; // QuestNo // var[0]
+        Printf("%g-", _Radius);
+        _PosType = RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[5].data; // QuestNo // var[0]
+        Printf("%d-", _PosType);
+        _Angle = RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[6].data; // QuestNo // var[0]
+        Printf("%g-\n", _Angle);
+        areaCount[_BlockNo] += 1;
+        if (areaCount[_BlockNo] == target) {
+            targetPos[_BlockNo].vec3[0] = RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[2].data[0];
+            targetPos[_BlockNo].vec3[1] = RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[2].data[1];
+            targetPos[_BlockNo].vec3[2] = RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[2].data[2];
+            uniID[_BlockNo] = RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[1].data; // QuestNo // var[0]
+            angle[_BlockNo] = RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[6].data; // QuestNo // var[0]
+        }
+	}
+    for (i = 0; i < 18; i++){ // show data
+        Printf("area-%d = %d, pos = (%g,%g,%g)\n", i, areaCount[i], targetPos[i].vec3[0], targetPos[i].vec3[1], targetPos[i].vec3[2]);
+    }
+
+    //apply change
+	for (i = 0; i < DataCount; i++){ // for each item in base List
+		DataItem_obj_idx = RSZFile[0].Data.RawData.RSZ[baseClass_obj_idx].var[1].var[i].ObjectIndex;
+		//Printf("%d\n", DataItem_obj_idx); // object index
+        _BlockNo = RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[0].data; // QuestNo // var[0]
+        //Printf("%d\n", _BlockNo);
+        if (areaCount[_BlockNo] >= target) { //actually use to check 4th only, if its 4th, leave others random
+            RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[2].data[0] = targetPos[_BlockNo].vec3[0];
+            RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[2].data[1] = targetPos[_BlockNo].vec3[1];
+            RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[2].data[2] = targetPos[_BlockNo].vec3[2];
+            //RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[1].data = uniID[_BlockNo];
+            RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[6].data = angle[_BlockNo];
+        }
+	}
+
+}
+
+//questRead();
 
 int curFile;//GetFileNum();
 int newFile;// = FileNew();
@@ -235,13 +374,18 @@ void runBatchFunction(){
     
     //0 = 1st area, 1 = 2nd area, 2 = 3rd area
     //mon_spond(2);
+
+    //1 = 1st occr of subspawn
+    subspawn(4);
 }
 
 void loopAllFile(){
-    for (curFile=0; curFile<47; curFile++){
+    for (curFile=0; curFile<12; curFile++){
         //curFile = GetFileNum();
         //runTemplate();
         //runBatchFunction();
     }
 }
-
+//loopAllFile();
+curFile = GetFileNum();
+//runBatchFunction();
