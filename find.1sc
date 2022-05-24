@@ -42,10 +42,10 @@ findHashName(0xD5832A24); //snow.otomo.fsm.action.OtomoMultiHitAction
 //findHashOccurNode(0xEA5D2BC6); //event(TransitionEvents)
 
 // print node info who ref to this type by input type name directly
-findHashOccurNode(hash_8("snow.player.fsm.PlayerFsm2ActionHunterWire"));
+//findHashOccurNode(hash_8("snow.PlayerPlayMotion2"));
 
 // print parent node which ref to this node
-//searchNodePredecessor(3543);
+//searchNodePredecessor(3533);
 
 //------------------------------------------------
 // script below
@@ -165,7 +165,7 @@ void findHashOccurNode(uint32 typeMMH){ //search occur by murmurhash of type nam
 
                     Printf(",BHVTHash(%d):%08X", enable, instance_BHVTHash);
                     if (GetNodeIDByActionBHVTHash(instance_BHVTHash) == 0)
-                        Printf(",Node[NaN]");
+                        Printf(",Node[NaN]ID:0x00000000");
                     if (typeMMH == 0xADA3CEC1)
 	                    Printf(",workID:%d,hitIndex:%d" ,GetRSZVarAsUint(i, typeMMH, j, 3), GetRSZVarAsUint(i, typeMMH, j, 2));
                     if (typeMMH == 0x25887C4B)
@@ -182,7 +182,7 @@ void findHashOccurNode(uint32 typeMMH){ //search occur by murmurhash of type nam
                     
                     Printf(",BHVTHash(%d):%08X", enable, instance_BHVTHash);
                     if (GetNodeIDByConditionBHVTID(objectID, i) == 0)
-                        Printf(",Node[NaN]");
+                        Printf(",Node[NaN]ID:0x00000000");
 
                 } else if (i == id_TransitionEvents /*|| i == id_StaticTransitionEvents*/) {
 			        instance_BHVTHash = GetRSZVarAsUint(i, typeMMH, j, 0);
@@ -190,7 +190,7 @@ void findHashOccurNode(uint32 typeMMH){ //search occur by murmurhash of type nam
                     
                     Printf(",BHVTHash(%d):%08X", enable, instance_BHVTHash);
                     if (GetNodeIDByTransitionBHVTID(objectID, i) == 0)
-                        Printf(",Node[NaN]");
+                        Printf(",Node[NaN]ID:0x00000000");
 
                 } else if (i == id_ExpressionTreeConditions || i == id_StaticExpressionTreeConditions) {
 			        instance_BHVTHash = GetRSZVarAsUint(i, typeMMH, j, 0);
@@ -241,9 +241,13 @@ uint GetNodeIDByActionBHVTHash(uint ActionBHVTHash){
             for (j=0;j<BehaviorTree.RawNodes.Node[i].Actions.ActionsCount.Count;j++){
                 //refActionBHVTHash = BehaviorTree.RawNodes.Node[i].Actions.Action[j].Action.hash;
                 if (BehaviorTree.RawNodes.Node[i].Actions.Action[j].Action.hash == ActionBHVTHash){
-	                Printf(",Node[%d],%s",i, BehaviorTree.RawNodes.Node[i].Name.String);
-                    //ReadBHVTHashName
-                    //BHVTHash
+                    if (occurCount > 0) {
+	                    Printf(",Node[%d]ID:%08X,%s",i, BehaviorTree.RawNodes.Node[i].ID.hash, BehaviorTree.RawNodes.Node[i].Name.String);
+                    }else{
+	                    Printf(",Node[%d]ID:%08X,%s",i, BehaviorTree.RawNodes.Node[i].ID.hash, BehaviorTree.RawNodes.Node[i].Name.String);
+                        //ReadBHVTHashName
+                        //BHVTHash
+                    }
                     occurCount++;
                 }
             }
@@ -267,19 +271,19 @@ uint GetNodeIDByTransitionBHVTID(uint TransitionBHVTID, uint BHVTlv){
                 if (exists(BehaviorTree.RawNodes.Node[i].States.State[j].mStates.Count.Count)){
                     if (BehaviorTree.RawNodes.Node[i].States.State[j].mStates.Count.Count == 1){
                         if (BehaviorTree.RawNodes.Node[i].States.State[j].mStates.ID.id == TransitionBHVTID){
-                            Printf(",State[%d],Node[%d],%s",j ,i, BehaviorTree.RawNodes.Node[i].Name.String);
+                            Printf(",State[%d],Node[%d]ID:%08X,%s",j ,i, BehaviorTree.RawNodes.Node[i].ID.hash, BehaviorTree.RawNodes.Node[i].Name.String);
                             for (l=0; l<NodeCount; l++)
                                 if (BehaviorTree.RawNodes.Node[l].ID.hash == BehaviorTree.RawNodes.Node[i].States.State[j].mTransitions.hash)
-                                    Printf(",->,Node[%d],%s",l, BehaviorTree.RawNodes.Node[l].Name.String);
+                                    Printf(",->,Node[%d]ID:%08X,%s",l, BehaviorTree.RawNodes.Node[i].ID.hash, BehaviorTree.RawNodes.Node[l].Name.String);
                             occurCount++;
                         }
                     } else {
                         for (k=0;k<BehaviorTree.RawNodes.Node[i].States.State[j].mStates.Count.Count;k++){
                             if (BehaviorTree.RawNodes.Node[i].States.State[j].mStates.IDs.ID[k].id == TransitionBHVTID){
-	                            Printf(",State[%d],Node[%d],%s",j ,i, BehaviorTree.RawNodes.Node[i].Name.String);
+	                            Printf(",State[%d],Node[%d]ID:%08X,%s",j ,i, BehaviorTree.RawNodes.Node[i].ID.hash, BehaviorTree.RawNodes.Node[i].Name.String);
                                 for (l=0; l<NodeCount; l++)
                                     if (BehaviorTree.RawNodes.Node[l].ID.hash == BehaviorTree.RawNodes.Node[i].States.State[j].mTransitions.hash)
-                                        Printf(",->,Node[%d],%s",l, BehaviorTree.RawNodes.Node[l].Name.String);
+                                        Printf(",->,Node[%d]ID:%08X,%s",l, BehaviorTree.RawNodes.Node[i].ID.hash, BehaviorTree.RawNodes.Node[l].Name.String);
                                 occurCount++;
                             }
                         }
@@ -305,10 +309,10 @@ uint GetNodeIDByConditionBHVTID(uint ConditionBHVTID, uint BHVTlv){
             for (j=0;j<BehaviorTree.RawNodes.Node[i].States.StatesCount.Count;j++){
 				if (BehaviorTree.RawNodes.Node[i].States.State[j].TransitionConditions.id == ConditionBHVTID){
 					if ((BehaviorTree.RawNodes.Node[i].States.State[j].TransitionConditions.idType == 64) == isStatic){
-						Printf(",State[%d],Node[%d],%s",j ,i, BehaviorTree.RawNodes.Node[i].Name.String);
+						Printf(",State[%d],Node[%d]ID:%08X,%s",j ,i, BehaviorTree.RawNodes.Node[i].ID.hash, BehaviorTree.RawNodes.Node[i].Name.String);
 							for (l=0; l<NodeCount; l++)
 								if (BehaviorTree.RawNodes.Node[l].ID.hash == BehaviorTree.RawNodes.Node[i].States.State[j].mTransitions.hash)
-									Printf(",->,Node[%d],%s",l, BehaviorTree.RawNodes.Node[l].Name.String);
+									Printf(",->,Node[%d]ID:%08X,%s",l, BehaviorTree.RawNodes.Node[i].ID.hash, BehaviorTree.RawNodes.Node[l].Name.String);
 						occurCount++;
 					}
 				}
@@ -318,10 +322,10 @@ uint GetNodeIDByConditionBHVTID(uint ConditionBHVTID, uint BHVTlv){
             for (j=0;j<BehaviorTree.RawNodes.Node[i].Transitions.TransitionCount.Count;j++){
 				if (BehaviorTree.RawNodes.Node[i].Transitions.Transition[j].mStartStateTransition.id == ConditionBHVTID){
 					if ((BehaviorTree.RawNodes.Node[i].Transitions.Transition[j].mStartStateTransition.idType == 64) == isStatic){
-						Printf(",Transition[%d],Node[%d],%s",j ,i, BehaviorTree.RawNodes.Node[i].Name.String);
+						Printf(",Transition[%d],Node[%d]ID:%08X,%s",j ,i, BehaviorTree.RawNodes.Node[i].ID.hash, BehaviorTree.RawNodes.Node[i].Name.String);
 							for (l=0; l<NodeCount; l++)
 								if (BehaviorTree.RawNodes.Node[l].ID.hash == BehaviorTree.RawNodes.Node[i].Transitions.Transition[j].mStartState.hash)
-									Printf(",->,Node[%d],%s",l, BehaviorTree.RawNodes.Node[l].Name.String);
+									Printf(",->,Node[%d]ID:%08X,%s",l, BehaviorTree.RawNodes.Node[i].ID.hash, BehaviorTree.RawNodes.Node[l].Name.String);
 						occurCount++;
 					}
 				}
