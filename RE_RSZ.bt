@@ -2929,6 +2929,9 @@ if (ReadUInt(0)==id_SCN || ReadUInt(0)==id_PFB || ReadUInt(0)==id_USR || ReadUIn
                 int numAutoGenerateJoints;
             }
             uint userDataSize <read=readRCOLWarning>;
+            if (RSZVersion == "MHRise") {
+                uint64 unkn1;
+            }
             uint status;
             if (RSZVersion == "RE3") {
                 uint64 uknA; 
@@ -2940,6 +2943,11 @@ if (ReadUInt(0)==id_SCN || ReadUInt(0)==id_PFB || ReadUInt(0)==id_USR || ReadUIn
             if (RSZVersion == "RE8" || RSZVersion == "MHRise") {
                 uint64 ignoreTagTbl;
                 uint64 autoGenerateJointDescTbl;
+            }
+            if (RSZVersion == "MHRise") {
+                uint64 unkn2;
+                uint64 unkn3;
+                uint64 pad;
             }
         }
         if (magic == id_SCN) {
