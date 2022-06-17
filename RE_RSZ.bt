@@ -2609,7 +2609,8 @@ typedef struct {
         ushort embedCount;
     } header;
     local uint variableCount = header.variableCount;
-    if (header.magic == id_uvar) {
+    //if (header.magic == id_uvar) {
+    if (false) {
         local uint UVARStart <hidden=true> = BHVTStart;
         if (header.dataOffset + BHVTStart < startof(this) + 56)
             UVARStart = startof(this); 
@@ -5492,16 +5493,16 @@ typedef struct(BHVTlvl lv, string Name) {
                 }
             }
         } else if (Type == id_NameHash) {// && exists(Header.BHVT.Uvar)
-            local uint uv <hidden=true>;
-            while (exists(Header.BHVT.Uvar[uv])) {
-                for (i=0; i<Header.BHVT.Uvar[uv].variableCount; i++) {
-                    if (Header.BHVT.Uvar[uv].Data.Var[i].nameHash == hash) {
-                        FSeek(startof(Header.BHVT.Uvar[uv].Data.Var[i]));
-                        struct UVARIABLE Uvariable;
-                    }
-                }
-                uv++;
-            }
+            //local uint uv <hidden=true>;
+            //while (exists(Header.BHVT.Uvar[uv])) {
+            //    for (i=0; i<Header.BHVT.Uvar[uv].variableCount; i++) {
+            //        if (Header.BHVT.Uvar[uv].Data.Var[i].nameHash == hash) {
+            //            FSeek(startof(Header.BHVT.Uvar[uv].Data.Var[i]));
+            //            struct UVARIABLE Uvariable;
+            //        }
+            //    }
+            //    uv++;
+            //}
         } else if (detectedHash(startof(hash))) {
             local int kk <hidden=true>, tg <hidden=true>, valueStart <hidden=true>, doExit <hidden=true>;
             if (lvl == -1) {
