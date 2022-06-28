@@ -16,6 +16,22 @@
 //Printf("%d\n", RSZFile[0].InstanceInfos.instanceInfo[RSZFile[0].ObjectTable[0]].CombinedKey);
 //Printf("%d\n", RSZFile[0].Data.RawData.RSZ[RSZFile[0].ObjectTable[0]].var[0].Count);
 
+//RSZ Parser By Darkness:
+#link "RSZParser.dll"
+ubyte   IsInitialized();
+void    ParseJson(string jsonPath);
+string  GetRSZClassName(uint32 classHash);
+uint32  GetFieldCount(uint32 classHash);
+uint32  GetFieldAlignment(uint32 classHash, uint32 fieldIndex);
+ubyte   GetFieldArrayState(uint32 classHash, uint32 fieldIndex);
+string  GetFieldName(uint32 classHash, uint32 fieldIndex);
+string  GetFieldTypeName(uint32 classHash, uint32 fieldIndex);
+string  GetFieldOrgTypeName(uint32 classHash, uint32 fieldIndex);
+uint32  GetFieldSize(uint32 classHash, uint32 fieldIndex);
+uint64  GetFieldType(uint32 classHash, uint32 fieldIndex);
+ubyte   IsFieldNative(uint32 classHash, uint32 fieldIndex);
+#endlink
+
 void adjust_quest_hp() {
 	local int questCount = RSZFile[0].Data.RawData.RSZ[RSZFile[0].ObjectTable[0]].var[0].Count;
 	local int i=1;
@@ -282,7 +298,7 @@ void subspawn(int target) {
 
 }
 
-void subspawn(int target) {
+void subspawn2(int target) {
     local int baseClass_obj_idx = RSZFile[0].ObjectTable[0]; //object index of base List containing all data
 	local int DataCount = RSZFile[0].Data.RawData.RSZ[baseClass_obj_idx].var[1].Count; //var[0] = first fleid
 	local int DataItem_obj_idx = 0; // object index of item in base List for looping
@@ -389,3 +405,143 @@ void loopAllFile(){
 //loopAllFile();
 curFile = GetFileNum();
 //runBatchFunction();
+char ToGrade(int value){
+	switch(value){
+		case 0: return 'C';
+		case 1: return 'B';
+		case 2: return 'A';
+		case 3: return 'S';
+		default: return ' ';
+	}
+
+}
+void ReadslotData() { //slot num read
+    local int baseClass_obj_idx = RSZFile[0].ObjectTable[0]; //object index of base List containing all data
+	local int DataCount = RSZFile[0].Data.RawData.RSZ[baseClass_obj_idx].var[0].Count; //var[0] = first fleid
+	local int DataItem_obj_idx = 0; // object index of item in base List for looping
+	local int DataItem_field = 0; // temp var for looping
+	local int i = 0;
+	local int j = 0;
+	local int k = 0;
+
+    local int SlotNumCount = 0;
+	local int Slot_obj_idx = 0; // object index of item in Slot_obj List for looping
+	local int _Skill1Grade = 0; // object index of item in Slot_obj List for looping
+	local int _Skill2Grade = 0; // object index of item in Slot_obj List for looping
+    local int pListCount = 0;
+    local int pListVarIndex = 2;
+	local int pListItem = 0;
+    Printf("items count in base list: %d\n", DataCount);
+	for (i = 0; i < DataCount; i++){ // for each item in base List
+		DataItem_obj_idx = RSZFile[0].Data.RawData.RSZ[baseClass_obj_idx].var[0].var[i].ObjectIndex;
+		//Printf("%d\n", DataItem_obj_idx); // object index
+        SlotNumCount = RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[0].Count; // SlotNumListObjectCount // var[0]
+        Printf("SlotParam[%d]\n", i);
+	    for (j = 0; j < SlotNumCount; j++){ // for each item in List
+            Slot_obj_idx = RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[0].var[j].ObjectIndex;
+            Printf("SlotNumTable[%d] | ", j);
+            _Skill1Grade = RSZFile[0].Data.RawData.RSZ[Slot_obj_idx].var[0].data;
+            Printf("%s | ", ToGrade(_Skill1Grade));
+            _Skill2Grade = RSZFile[0].Data.RawData.RSZ[Slot_obj_idx].var[1].data;
+            Printf("%s", ToGrade(_Skill2Grade));
+            for (pListVarIndex = 2; pListVarIndex <= 8; pListVarIndex++){
+                pListCount = RSZFile[0].Data.RawData.RSZ[Slot_obj_idx].var[pListVarIndex].Count; //pList
+                Printf(" | [");
+                for (k=0; k<pListCount; k++){
+                    pListItem = RSZFile[0].Data.RawData.RSZ[Slot_obj_idx].var[pListVarIndex].var[k].data; //prob
+                    if (k==0)
+                        Printf("%3d", pListItem);
+                    else
+                        Printf(",%3d", pListItem);
+                }
+                Printf("]");
+            }
+            Printf("\n");
+        }
+	}
+
+}
+
+uint32 hash_8(string key){
+    local uint64 it<hidden=true>;
+    local const uint length = Strlen(key);
+    local uint32 mmhVal = 0;
+    if (length) {
+        local byte key_array[length];
+        for(it = 0; it < length; it += 1){
+            key_array[it] = key[it];
+        }
+        mmhVal = mmh3(key_array, length, 0xFFFFFFFF);
+        Printf("%08Xh\n",mmhVal);
+        return mmhVal;
+    } return 0;
+}
+
+void ReadData() { //bulletParamData
+
+    uint32 ListClassHash = RSZFile[0].InstanceInfos.instanceInfo[1].typeId.Hash;
+    Printf("%08Xh "+GetRSZClassName(ListClassHash)+"\n",ListClassHash);
+
+    local int baseClass_obj_idx = RSZFile[0].ObjectTable[0]; //object index of base List containing all data
+	local int DataCount = RSZFile[0].Data.RawData.RSZ[baseClass_obj_idx].var[0].Count; //var[0] = first fleid
+	local int DataItem_obj_idx = 0; // object index of item in base List for looping
+
+	local int i = 0;
+	local int j = 0;
+	local int k = 0;
+    local string s="";
+    local string ss="";
+    local string sss="";
+
+    local int isList = 0;
+    local int ListCount = 0;
+
+    local int fieldCount = GetFieldCount(ListClassHash);
+    local int isListEveryField[fieldCount];
+
+    Printf("items count in base list: %d\n", DataCount);
+    
+    s="";
+    for (j=0; j<fieldCount; j++){
+        s += GetFieldName(ListClassHash, j)+"|";
+        isListEveryField[j] = GetFieldArrayState(ListClassHash, j);
+    }
+    s = SubStr(s,0,Strlen(s)-1);
+    Printf(s+"\n");
+
+	for (i = 0; i < DataCount; i++){ // for each item in base List
+		DataItem_obj_idx = RSZFile[0].Data.RawData.RSZ[baseClass_obj_idx].var[0].var[i].ObjectIndex;
+        
+        s="";
+        for (j=0; j<fieldCount; j++){
+            
+            if (isListEveryField[j] == true){
+                s+="[";
+                ListCount = RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[j].Count;
+                ss="";
+                for (k=0; k<ListCount; k++){
+                    if (RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[j].var[k].data > 999999){
+                        SPrintf(sss,"%d,",RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[j].var[k].data);
+                    }else{
+                        SPrintf(sss,"%g,",RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[j].var[k].data);
+                    }
+                    ss+=sss;
+                }
+                ss = SubStr(ss,0,Strlen(ss)-1)+"]|";
+            }
+            else{
+                    if (RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[j].data > 999999)
+                        SPrintf(ss,"%d|",RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[j].data); // SlotNumListObjectCount // var[0]
+                    else
+                        SPrintf(ss,"%g|",RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[j].data);
+                }
+            s+=ss;
+        }
+        s = SubStr(s,0,Strlen(s)-1);
+		Printf(s+"\n"); // object index
+	}
+
+}
+
+ReadData();
+//ReadslotData();
