@@ -5566,7 +5566,7 @@ typedef struct(BHVTlvl lv, string Name) {
     local string Name <hidden=true> = Name;
     local BHVTlvl Type <hidden=true> = lv;
     
-    uint hash <format=hex>;
+    TagsCollection hash <format=hex>;
     if (finished && hash != -1 && hash != 0) {
         local short lvl <hidden=true> = getBHVTLevel(Type);
         if (Type == id_Transition) {
