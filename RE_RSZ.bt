@@ -17,16 +17,15 @@ local string    RSZVersion       <hidden=true>        = "MHRise";               
 local int       RTVersion        <hidden=true>        = TRUE;                      //Use Ray-Tracing Update file formats for RE7, RE2R and RE3R (subject to AutoDetectGame)
 local int       Nesting          <hidden=true>        = TRUE;                      //Attempt to nest class instances inside eachother
 local int       ShowAlignment    <hidden=true>        = FALSE;                     //Show metadata for each variable
-local int       ShowChildRSZs    <hidden=true>        = TRUE;                      //Show all RSZs one after another, non-nested. Disabling hides nested RSZHeaders
+local int       ShowChildRSZs    <hidden=true>        = FALSE;                     //Show all RSZs one after another, non-nested. Disabling hides nested RSZHeaders
 local int       UseSpacers       <hidden=true>        = TRUE;                      //Show blank rows between some structs
 local int       AutoDetectGame   <hidden=true>        = TRUE;                      //Automatically detect RSZVersion based on the name + ext of the file being viewed
 local int       RedetectBHVT     <hidden=true>        = TRUE;                      //Will automatically redetect the next BHVT node if there is a problem 
 local int       HideRawData      <hidden=true>        = FALSE;                     //Hides RawData struct
 local int       HideRawNodes     <hidden=true>        = TRUE;                      //Hides RawNodes struct
 local int       SortRequestSets  <hidden=true>        = TRUE;                      //Sorts RCOL RequestSets by their IDs
-local int       ExposeUserDatas  <hidden=true>        = TRUE;                      //Makes RSZFiles that contain embedded userDatas start after the Userdatas, for ctrl+J
-local int       SeekByGameObject <hidden=true>        = TRUE;                      //Will automatically seek between detected GameObjects to fix reading errors
-local int       ShowEnum         <hidden=true>        = TRUE;                      //Show enum to increase readibility
+local int       ExposeUserDatas  <hidden=true>        = TRUE;                      //Makes RSZFiles that contain embedded userDatas start after the Userdatas, for ctrl+J jump
+local int       SeekByGameObject <hidden=true>        = FALSE;                     //Will automatically seek between detected GameObjects to fix reading errors
 
 //Path to Noesis.exe
 local wstring NoesisPath <hidden=true> =              "C:\\Program Files\\noesis\\Noesis.exe";
@@ -58,8 +57,7 @@ uint64  GetFieldType(uint32 classHash, uint32 fieldIndex);
 ubyte   IsFieldNative(uint32 classHash, uint32 fieldIndex);
 #endlink
 
-//#include "enums.hpp"
-#include "motfsmEnum.bt"
+#include "enums.hpp"
 
 //Local variables:
 local int i <hidden=true>, j <hidden=true>, k <hidden=true>, m <hidden=true>, n <hidden=true>, o <hidden=true>, h <hidden=true>, temp <hidden=true>,
@@ -738,8 +736,9 @@ int getLevelRSZ(uint offset) {
 
 typedef struct {
     uchar uuid[16] <open=suppress>;
-    if (ReadInt(startof(uuid)) != -1 && ReadInt(startof(uuid)) != 0 ) {
-        if (FindFirst(ReadInt(startof(uuid))) != startof(uuid) || FindFirst(ReadInt(startof(uuid)),1,0,0,0.0,1,startof(uuid)+16,0,24) != -1) {
+    local int firstFourBytes <hidden=true> = ReadInt(startof(uuid));
+    if (firstFourBytes != -1 && firstFourBytes != 0 ) {
+        if (FindFirst(firstFourBytes) != startof(uuid) || FindFirst(firstFourBytes,1,0,0,0.0,1,startof(uuid)+16,0,24) != -1) {
             local string Guid <hidden=true> = TranslateGUID(uuid);
             FSkip(-4);
             struct SAMEGUIDS SameGUIDs(TranslateGUID(uuid)) <size=4>;
@@ -1185,7 +1184,7 @@ typedef ubyte Bool <read=ReadBOOL, write=WriteBOOL>;
     }
 
 //main typedef for RSZ chunks:
-typedef struct(uint32 classHash, uint16 fieldIndex) {
+typedef struct(uint32 classHash, ubyte fieldIndex) {
     local uint varStart <hidden=true> = FTell();
     local ubyte lvl <hidden=true> = level;
     if (exists(parentof(this).lvl)) 
@@ -1194,7 +1193,7 @@ typedef struct(uint32 classHash, uint16 fieldIndex) {
     //    lvl = getLevel(FTell());
     local ubyte padding <hidden=true> = varStart - lastVarEnd;
     local uint32 classHash <hidden=true> = classHash;
-    local uint16 fieldIndex <hidden=true> = fieldIndex;
+    local ubyte fieldIndex <hidden=true> = fieldIndex;
     local string fieldName <hidden=true> = GetFieldName(classHash, fieldIndex);
     local string fieldDataType <hidden=true> = GetFieldTypeName(classHash, fieldIndex);
     local TypeIDs fieldType <hidden=true> = GetFieldType(classHash, fieldIndex);
@@ -1606,10 +1605,9 @@ typedef struct(uint32 classHash, uint16 fieldIndex) {
         if (elementSize > 16)
             FSeek(varStart + elementSize);
         else if (elementSize == 4 && exists(data) && startof(data)+4 <= FileSize() && ReadInt(startof(data)) <= 512)
-			if (ShowEnum) enums();
-        if (!finished) {
-            FSkip(-1);
-            ubyte FieldNamer <read=ReadVariableNamer, write=WriteVariableName>;
+            enums();
+        
+        if (!finished || (fieldType == Data_tid && !exists(ObjectIndex))) {
             local string OriginalType = fieldOrgTypeName;
             if (!finished) {
                 FSkip(-1);
@@ -2177,7 +2175,6 @@ typedef struct {
         }
     }
     
-    
     local string name <hidden=true> = RSZFile[lvl].InstanceInfos.instanceInfo[idx].typeId.HashName;
     local wstring title <hidden=true>; 
     local wstring secondTitle <hidden=true>;
@@ -2415,6 +2412,7 @@ typedef struct(int64 atAddress, int64 addOffset, byte isAbsolute) {
         else {
             char buffer[sizeof(st.String)];
             WriteBytes(buffer, startof(st.String), sizeof(st.String)); //write 0s
+            //WriteWString(startof(st.String), s );
             st.String = s; 
         }
     }
@@ -2675,16 +2673,13 @@ typedef struct {
         uint64 dataOffset;
         uint64 embedsInfoOffset;
         uint64 hashInfoOffset;
-        if (version <= 2) {
-            uint64 ukn;
-        }
+        uint64 ukn;
         uint UVARhash;
         ushort variableCount;
         ushort embedCount;
     } header;
     local uint variableCount = header.variableCount;
-    //if (header.magic == id_uvar) {
-    if (false) {
+    if (header.magic == id_uvar) {
         local uint UVARStart <hidden=true> = BHVTStart;
         if (header.dataOffset + BHVTStart < startof(this) + 56)
             UVARStart = startof(this); 
@@ -3007,9 +3002,6 @@ if (ReadUInt(0)==id_SCN || ReadUInt(0)==id_PFB || ReadUInt(0)==id_USR || ReadUIn
                 int numAutoGenerateJoints;
             }
             uint userDataSize <read=readRCOLWarning>;
-            if (RSZVersion == "MHRise") {
-                uint64 unkn1;
-            }
             uint status;
             if (!RTVersion && RSZVersion == "RE3") {
                 uint64 uknA; 
@@ -3024,11 +3016,6 @@ if (ReadUInt(0)==id_SCN || ReadUInt(0)==id_PFB || ReadUInt(0)==id_USR || ReadUIn
             if (!(RSZVersion == "DMC5" || (!RTVersion && (RSZVersion == "RE2" || RSZVersion == "RE7")))) {
                 uint64 ignoreTagTbl;
                 uint64 autoGenerateJointDescTbl;
-            }
-            if (RSZVersion == "MHRise") {
-                uint64 unkn2;
-                uint64 unkn3;
-                uint64 pad;
             }
         }
         if (magic == id_SCN) {
@@ -3075,7 +3062,7 @@ if (ReadUInt(0)==id_SCN || ReadUInt(0)==id_PFB || ReadUInt(0)==id_USR || ReadUIn
                 
                 if (transitionMapCount) 
                     struct TRANSITIONMAP {
-                        int transitionId;
+                        uint transitionId;
                         int dataIndex;
                         if ( exists(Header.TransitionData[dataIndex])) {
                             FSeek(startof(Header.TransitionData[dataIndex]));
@@ -3091,7 +3078,7 @@ if (ReadUInt(0)==id_SCN || ReadUInt(0)==id_PFB || ReadUInt(0)==id_USR || ReadUIn
                 FSeek(transitionDataTbl);
                 if (transitionDataCount) 
                     struct TRANSITIONDATA {
-                        int id <format=hex>;
+                        uint id <format=hex>;
                         enum {
                             EndType_None = 0x0,
                             EndType_EndOfMotion = 0x1,
@@ -3236,19 +3223,17 @@ else {
     } Header;
     FSkip(-1);
 }
-
-    #include "TagsCollection.bt"
-	
+    
     typedef struct {
         struct BHVTCount TagsCount(1); 
         if (!finished) {
             if (TagsCount.Count > 1) 
                 struct { 
                     for (i=0; i<TagsCount.Count; i++) 
-                        TagsCollection Tags <format=hex>; 
+                        int Tags <format=hex>; 
                 } Tags; 
             else if (TagsCount.Count == 1) 
-                TagsCollection Tags <format=hex>;
+                int Tags <format=hex>;
         } else {
             if (TagsCount.Count && TagsCount.Count < FileSize() && FTell() + TagsCount.Count * 4 < RSZOffset)
                 if (TagsCount.Count > 1) { 
@@ -3292,7 +3277,7 @@ else {
             struct BHVTHash mStartTransitionEvent(id_All, "");          
             FSkip(4 * TransitionCount.Count - 4);
         }
-        if (detectedHash(FTell()) /*&& ReadUByte(FTell()+2) != 0*/) // there are hash zero at [3]
+        if (detectedHash(FTell()) && ReadUByte(FTell()+2) != 0) 
             struct BHVTHash mStartState(id_All, "");
         else
             struct BHVTId mStartState(id_All, "", 0);
@@ -3307,7 +3292,7 @@ else {
     
     typedef struct {
         FSeek(pos);
-        struct BHVTId mStates(id_TransitionEvents, "", 1); 
+        struct BHVTId mStates(id_All, "", 1); 
         pos = FTell();
         for (j=mm+1; j<StatesCount.Count; j++)
             fakeStateList();
@@ -5389,7 +5374,7 @@ typedef struct (string uuid) {
         n++;
     }
     local uint RSZIdx <hidden=true>;
-
+    
     if (exists(Header.BHVT.Uvar)) {
         local uint vd <hidden=true>;
         while (exists(Header.BHVT.Uvar[uv])) {
@@ -5407,23 +5392,10 @@ typedef struct (string uuid) {
             }
             uv++;
         }
-        uv=0;
-        while (exists(Header.BHVT.Uvar[uv])) {
-            for (i=0; i<Header.BHVT.Uvar[uv].header.variableCount; i++) {
-                if (TranslateGUID(Header.BHVT.Uvar[uv].HashData.GUIDs.GUIDs[i].uuid) == Guid) {
-                    FSeek(startof(Header.BHVT.Uvar[uv].Data.Var[Header.BHVT.Uvar[uv].HashData.dataHashMap[i]]));
-                    struct UVARIABLE Uvariable <open=true>;
-                    break;
-                }
-            }
-            uv++;
-            if (exists(Uvariable)) 
-                break;
-        }
-        if (!exists(Uvariable)) {
-            FSkip(-1);
-        }
     }
+
+    findUVARConditionWithGuid(Guid, true);
+    
     uv = 0;
     while (exists(RSZFile[uv])) {
         vr = 0;
@@ -5466,6 +5438,32 @@ typedef struct (string uuid) {
     checkUseSpacers();
 } SAMEGUIDS; 
 
+void findUVARConditionWithGuid(string Guid, ubyte is_SameGuids) {
+    local uint uv;
+    
+    if (exists(Header.BHVT.Uvar)) {
+        local uint vd;
+        while (exists(Header.BHVT.Uvar[uv])) {
+            for (i=0; i<Header.BHVT.Uvar[uv].header.variableCount; i++) {
+                if (TranslateGUID(Header.BHVT.Uvar[uv].HashData.GUIDs.GUIDs[i].uuid) == Guid) {
+                    FSeek(startof(Header.BHVT.Uvar[uv].Data.Var[Header.BHVT.Uvar[uv].HashData.dataHashMap[i]]));
+                    if (is_SameGuids)
+                        struct UVARIABLE Uvariable <open=true>;
+                    else
+                        struct UVARIABLE Uvariable;
+                    break;
+                }
+            }
+            uv++;
+            if (exists(Uvariable)) 
+                break;
+        }
+        if (!exists(Uvariable)) {
+            FSkip(-1);
+        }
+    }
+}
+
 int CheckFieldGUIDs(RSZVariable &v, string Guid) {
     if (exists(v.Guid.uuid) && TranslateGUID(v.Guid.uuid) == Guid)
         return true;
@@ -5491,7 +5489,7 @@ typedef struct(BHVTlvl lv, string Name, ubyte isList) {
             struct { 
                 struct BHVTId ID(Type, "", 0)[Count.Count]; 
             } IDs;
-        k=0;
+        /*k=0;
         while(exists(ID[k])) {
             FSeek(startof(ID[k]));
             struct BHVTIDStrings {
@@ -5501,18 +5499,18 @@ typedef struct(BHVTlvl lv, string Name, ubyte isList) {
             } Strings;
             k++;
         }
-        FSeek(startof(Count) + 4 + Count.Count*4);
+        FSeek(startof(Count) + 4 + Count.Count*4);*/
     } else {
         ushort id;
         ubyte ukn;
         ubyte idType;
-        if (idType == 64 && Type >= 0 && Type <= 5)
-            Type += 5; // to static version
+        if (idType == 64 && Type == id_Conditions)
+            Type = id_StaticConditions;
         
-        if (finished && (id > -1 || (id == 0 && idType == 64))) { // as id is unsigned, it should be > -1, so it is if (finished)
+        if (finished && (id > -1 || (id == 0 && idType == 64))) {
             local short lvl <hidden=true> = getBHVTLevel(Type);
 
-            if (lvl > -1 && exists(RSZFile[lvl].ObjectTable[id]) && exists(RSZFile[lvl].Data.RawData.RSZ[RSZFile[lvl].ObjectTable[id]])) { //
+            if (lvl > -1 && exists(RSZFile[lvl].ObjectTable[id]) && exists(RSZFile[lvl].Data.RawData.RSZ[RSZFile[lvl].ObjectTable[id]])) { //id && 
                 FSeek(startof(RSZFile[lvl].Data.RawData.RSZ[RSZFile[lvl].ObjectTable[id]]));
                 local ushort RSZIdx <hidden=true> = (uint)RSZFile[lvl].ObjectTable[id];
                 struct RSZInstance RSZ <open=true>;  //
@@ -5524,7 +5522,8 @@ typedef struct(BHVTlvl lv, string Name, ubyte isList) {
                 }
                 if (exists(this.RSZ.var[vr].Guid.uuid) && ReadUInt(startof(this.RSZ.var[vr].Guid.uuid))) {
                     local string Guid <hidden=true>  = TranslateGUID(this.RSZ.var[vr].Guid.uuid);
-                    struct SAMEGUIDS SameGUIDs(Guid) <name="Same GUID", open=true>;
+                    findUVARConditionWithGuid(Guid, false);
+                    struct SAMEGUIDS SameGUIDs(Guid) <name="Same GUID">;//, open=true>;
                     checkUseSpacers();
                 }
             } else if (exists(Header.TransitionMap[id])) {
@@ -5537,10 +5536,11 @@ typedef struct(BHVTlvl lv, string Name, ubyte isList) {
     }
 } BHVTId <open=suppress, optimize=false, name=ReadBHVTIdName, read=ReadBHVTId, write=WriteBHVTId>;
 
-
     wstring ReadBHVTId(BHVTId &i) { 
         string s;
-        if (exists(i.id)) {
+        if (exists(i.Uvariable))
+            return ReadUVariableName(i.Uvariable);
+        else if (exists(i.id)) {
             if (exists(i.RSZ)) 
                 return ReadRSZInstanceName(i.RSZ); 
             if (ReadUByte(startof(i)+3) == 0)
@@ -5566,7 +5566,7 @@ typedef struct(BHVTlvl lv, string Name) {
     local string Name <hidden=true> = Name;
     local BHVTlvl Type <hidden=true> = lv;
     
-    TagsCollection hash <format=hex>;
+    uint hash <format=hex>;
     if (finished && hash != -1 && hash != 0) {
         local short lvl <hidden=true> = getBHVTLevel(Type);
         if (Type == id_Transition) {
@@ -5584,22 +5584,21 @@ typedef struct(BHVTlvl lv, string Name) {
                 }
             }
         } else if (Type == id_NameHash) {// && exists(Header.BHVT.Uvar)
-            //local uint uv <hidden=true>;
-            //while (exists(Header.BHVT.Uvar[uv])) {
-            //    for (i=0; i<Header.BHVT.Uvar[uv].variableCount; i++) {
-            //        if (Header.BHVT.Uvar[uv].Data.Var[i].nameHash == hash) {
-            //            FSeek(startof(Header.BHVT.Uvar[uv].Data.Var[i]));
-            //            struct UVARIABLE Uvariable;
-            //        }
-            //    }
-            //    uv++;
-            //}
+            local uint uv <hidden=true>;
+            while (exists(Header.BHVT.Uvar[uv])) {
+                for (i=0; i<Header.BHVT.Uvar[uv].variableCount; i++) {
+                    if (Header.BHVT.Uvar[uv].Data.Var[i].nameHash == hash) {
+                        FSeek(startof(Header.BHVT.Uvar[uv].Data.Var[i]));
+                        struct UVARIABLE Uvariable;
+                    }
+                }
+                uv++;
+            }
         } else if (detectedHash(startof(hash))) {
             local int kk <hidden=true>, tg <hidden=true>, valueStart <hidden=true>, doExit <hidden=true>;
             if (lvl == -1) {
                 while (exists(BehaviorTree.RawNodes.Node[kk]) ) {
                     if (Type == id_Tags) {
-                        if(exists(BehaviorTree.RawNodes.Node[kk].Tags))
                         if (BehaviorTree.RawNodes.Node[kk].Tags.TagsCount.Count > 1) {
                             for (tg=0; tg<BehaviorTree.RawNodes.Node[kk].Tags.TagsCount.Count; tg++) {
                                 valueStart = 0;
