@@ -14,10 +14,10 @@
 
 //              Option:                                                            //Effect:
 local string    RSZVersion       <hidden=true>        = "MHRise";                  //change between RE2, RE3, RE8, DMC5 or MHRise
-local int       RTVersion        <hidden=true>        = TRUE;                      //Use Ray-Tracing Update file formats for RE7, RE2R and RE3R (subject to AutoDetectGame)
+local int       RTVersion        <hidden=true>        = FALSE;                     //Use Ray-Tracing Update file formats for RE7, RE2R and RE3R (subject to AutoDetectGame)
 local int       Nesting          <hidden=true>        = TRUE;                      //Attempt to nest class instances inside eachother
 local int       ShowAlignment    <hidden=true>        = FALSE;                     //Show metadata for each variable
-local int       ShowChildRSZs    <hidden=true>        = FALSE;                     //Show all RSZs one after another, non-nested. Disabling hides nested RSZHeaders
+local int       ShowChildRSZs    <hidden=true>        = TRUE;                      //Show all RSZs one after another, non-nested. Disabling hides nested RSZHeaders
 local int       UseSpacers       <hidden=true>        = TRUE;                      //Show blank rows between some structs
 local int       AutoDetectGame   <hidden=true>        = TRUE;                      //Automatically detect RSZVersion based on the name + ext of the file being viewed
 local int       RedetectBHVT     <hidden=true>        = TRUE;                      //Will automatically redetect the next BHVT node if there is a problem 
@@ -26,6 +26,7 @@ local int       HideRawNodes     <hidden=true>        = TRUE;                   
 local int       SortRequestSets  <hidden=true>        = TRUE;                      //Sorts RCOL RequestSets by their IDs
 local int       ExposeUserDatas  <hidden=true>        = TRUE;                      //Makes RSZFiles that contain embedded userDatas start after the Userdatas, for ctrl+J jump
 local int       SeekByGameObject <hidden=true>        = FALSE;                     //Will automatically seek between detected GameObjects to fix reading errors
+local int       ShowEnum         <hidden=true>        = TRUE;                      //Show enum to increase readibility
 
 //Path to Noesis.exe
 local wstring NoesisPath <hidden=true> =              "C:\\Program Files\\noesis\\Noesis.exe";
@@ -57,7 +58,8 @@ uint64  GetFieldType(uint32 classHash, uint32 fieldIndex);
 ubyte   IsFieldNative(uint32 classHash, uint32 fieldIndex);
 #endlink
 
-#include "enums.hpp"
+//#include "enums.hpp"
+#include "motfsmEnum.bt"
 
 //Local variables:
 local int i <hidden=true>, j <hidden=true>, k <hidden=true>, m <hidden=true>, n <hidden=true>, o <hidden=true>, h <hidden=true>, temp <hidden=true>,
@@ -1184,7 +1186,7 @@ typedef ubyte Bool <read=ReadBOOL, write=WriteBOOL>;
     }
 
 //main typedef for RSZ chunks:
-typedef struct(uint32 classHash, ubyte fieldIndex) {
+typedef struct(uint32 classHash, uint16 fieldIndex) {
     local uint varStart <hidden=true> = FTell();
     local ubyte lvl <hidden=true> = level;
     if (exists(parentof(this).lvl)) 
@@ -1193,7 +1195,7 @@ typedef struct(uint32 classHash, ubyte fieldIndex) {
     //    lvl = getLevel(FTell());
     local ubyte padding <hidden=true> = varStart - lastVarEnd;
     local uint32 classHash <hidden=true> = classHash;
-    local ubyte fieldIndex <hidden=true> = fieldIndex;
+    local uint16 fieldIndex <hidden=true> = fieldIndex;
     local string fieldName <hidden=true> = GetFieldName(classHash, fieldIndex);
     local string fieldDataType <hidden=true> = GetFieldTypeName(classHash, fieldIndex);
     local TypeIDs fieldType <hidden=true> = GetFieldType(classHash, fieldIndex);
@@ -1605,7 +1607,7 @@ typedef struct(uint32 classHash, ubyte fieldIndex) {
         if (elementSize > 16)
             FSeek(varStart + elementSize);
         else if (elementSize == 4 && exists(data) && startof(data)+4 <= FileSize() && ReadInt(startof(data)) <= 512)
-            enums();
+            if (ShowEnum) enums();
         
         if (!finished || (fieldType == Data_tid && !exists(ObjectIndex))) {
             local string OriginalType = fieldOrgTypeName;
@@ -3071,7 +3073,7 @@ if (ReadUInt(0)==id_SCN || ReadUInt(0)==id_PFB || ReadUInt(0)==id_USR || ReadUIn
                 
                 if (transitionMapCount) 
                     struct TRANSITIONMAP {
-                        uint transitionId;
+                        int transitionId;
                         int dataIndex;
                         if ( exists(Header.TransitionData[dataIndex])) {
                             FSeek(startof(Header.TransitionData[dataIndex]));
@@ -3087,7 +3089,7 @@ if (ReadUInt(0)==id_SCN || ReadUInt(0)==id_PFB || ReadUInt(0)==id_USR || ReadUIn
                 FSeek(transitionDataTbl);
                 if (transitionDataCount) 
                     struct TRANSITIONDATA {
-                        uint id <format=hex>;
+                        int id <format=hex>;
                         enum {
                             EndType_None = 0x0,
                             EndType_EndOfMotion = 0x1,
@@ -3232,17 +3234,19 @@ else {
     } Header;
     FSkip(-1);
 }
-    
+
+    #include "TagsCollection.bt"
+
     typedef struct {
         struct BHVTCount TagsCount(1); 
         if (!finished) {
             if (TagsCount.Count > 1) 
                 struct { 
                     for (i=0; i<TagsCount.Count; i++) 
-                        int Tags <format=hex>; 
+                        TagsCollection Tags <format=hex>; 
                 } Tags; 
             else if (TagsCount.Count == 1) 
-                int Tags <format=hex>;
+                TagsCollection Tags <format=hex>;
         } else {
             if (TagsCount.Count && TagsCount.Count < FileSize() && FTell() + TagsCount.Count * 4 < RSZOffset)
                 if (TagsCount.Count > 1) { 
@@ -3286,7 +3290,7 @@ else {
             struct BHVTHash mStartTransitionEvent(id_All, "");          
             FSkip(4 * TransitionCount.Count - 4);
         }
-        if (detectedHash(FTell()) && ReadUByte(FTell()+2) != 0) 
+        if (detectedHash(FTell()) /*&& ReadUByte(FTell()+2) != 0*/) // there are hash zero at [3]
             struct BHVTHash mStartState(id_All, "");
         else
             struct BHVTId mStartState(id_All, "", 0);
@@ -3301,7 +3305,7 @@ else {
     
     typedef struct {
         FSeek(pos);
-        struct BHVTId mStates(id_All, "", 1); 
+        struct BHVTId mStates(id_TransitionEvents, "", 1); 
         pos = FTell();
         for (j=mm+1; j<StatesCount.Count; j++)
             fakeStateList();
@@ -5514,10 +5518,10 @@ typedef struct(BHVTlvl lv, string Name, ubyte isList) {
         ushort id;
         ubyte ukn;
         ubyte idType;
-        if (idType == 64 && Type == id_Conditions)
-            Type = id_StaticConditions;
+        if (idType == 64 && Type >= 0 && Type <= 5)
+            Type += 5; // to static version
         
-        if (finished && (id > -1 || (id == 0 && idType == 64))) {
+        if (finished && (id > -1 || (id == 0 && idType == 64))) { // as id is unsigned, it should be > -1, so it is if (finished)
             local short lvl <hidden=true> = getBHVTLevel(Type);
 
             if (lvl > -1 && exists(RSZFile[lvl].ObjectTable[id]) && exists(RSZFile[lvl].Data.RawData.RSZ[RSZFile[lvl].ObjectTable[id]])) { //id && 
