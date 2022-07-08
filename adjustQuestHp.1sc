@@ -498,6 +498,7 @@ void ReadData() { //bulletParamData
 
     local int fieldCount = GetFieldCount(ListClassHash);
     local int isListEveryField[fieldCount];
+    local int isStringEveryField[fieldCount];
 
     Printf("items count in base list: %d\n", DataCount);
     
@@ -505,6 +506,10 @@ void ReadData() { //bulletParamData
     for (j=0; j<fieldCount; j++){
         s += GetFieldName(ListClassHash, j)+"|";
         isListEveryField[j] = GetFieldArrayState(ListClassHash, j);
+        if (GetFieldType(ListClassHash, j) == String_tid)
+            isStringEveryField[j] = true;
+        else
+            isStringEveryField[j] = false;
     }
     s = SubStr(s,0,Strlen(s)-1);
     Printf(s+"\n");
@@ -530,10 +535,18 @@ void ReadData() { //bulletParamData
                 ss = SubStr(ss,0,Strlen(ss)-1)+"]|";
             }
             else{
-                    if (RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[j].data > 999999)
-                        SPrintf(ss,"%d|",RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[j].data); // SlotNumListObjectCount // var[0]
-                    else
-                        SPrintf(ss,"%g|",RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[j].data);
+                    if (isStringEveryField[j] == true){
+                        SPrintf(sss,"%s|",RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[j].data);
+                        SPrintf(sss,StrDel(sss,Strstr(sss, "\r\n"),2));
+                        SPrintf(sss,StrDel(sss,Strstr(sss, "\r"),2));
+                        SPrintf(ss,StrDel(sss,Strstr(sss, "\n"),2));
+                    }
+                    else {
+                        if (RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[j].data > 999999)
+                            SPrintf(ss,"%d|",RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[j].data); // SlotNumListObjectCount // var[0]
+                        else
+                            SPrintf(ss,"%g|",RSZFile[0].Data.RawData.RSZ[DataItem_obj_idx].var[j].data);
+                    }
                 }
             s+=ss;
         }
