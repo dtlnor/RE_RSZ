@@ -1,17 +1,6 @@
-//------------------------------------------------
-//--- 010 Editor v12.0.1 Binary Template
-//
-//      File: 
-//   Authors: 
-//   Version: 
-//   Purpose: 
-//  Category: 
-// File Mask: 
-//  ID Bytes: 
-//   History: 
-//------------------------------------------------
 typedef enum<uint32>
     {
+        // add hash tags enum name for easy read bhvt node Tags (you may collect some from Enums_Internal.hpp dump by ref)
         ForCamera_EscapeWire = 3830230037,
         ForCamera_Nekotaku = 1331302790,
         ForCamera_MarionetteStart = 4223333002,
