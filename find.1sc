@@ -46,7 +46,42 @@ findHashName(0xD5832A24); //snow.otomo.fsm.action.OtomoMultiHitAction
 findHashOccurNode(hash_8("snow.player.fsm.PlayerHitAction2"));
 
 // print csv for motion2
-//findMotion2();
+local int motion2ActionList[24] = {
+    //em
+    0x1ab9067,
+    //npc
+    0x248f3387,
+    //player
+    0x25887c4b,
+    0x2c4ef909,
+    0x577dfc6,
+    0x5c42e08a,
+    0x695d814e,
+    0xa975136d,
+    0xf5974f2d,
+    0xF9F6D4D6,
+
+    //otomo
+    0x27bbfafd,
+    0x293acd42,
+    0x2c2f419a,
+    0x303e75db,
+    0x48440d5c,
+    0x4f495588,
+    0x72d408e2,
+    0x7f6d52d4,
+    0xd349bc4,
+    0xd6c7bc25,
+
+    //Env
+    0x3446c1ad,
+    0x44b6a452,
+    0xa58c1480,
+    0xa87d452d
+};
+//local int motionI = 0;
+//for (motionI = 0; motionI < 24; motionI++)
+//    findMotion2(motion2ActionList[motionI]);
 
 // print parent node which ref to this node
 //searchNodePredecessor(4217);
@@ -140,9 +175,9 @@ void findHashOccurNode(uint32 typeMMH){ //search occur by murmurhash of type nam
     local int count=0;
     local uint instance_BHVTHash = 0;
     local int enable = 0;
-    local int objectID = -1;
     local string rszInfo = "";
     local string temp = "";
+    local uint last_obj_indx = 0;
     
     if (findHashName(typeMMH) == "Unknown Class!") return;
 
@@ -164,12 +199,13 @@ void findHashOccurNode(uint32 typeMMH){ //search occur by murmurhash of type nam
     
     for (i = 0; i < 11; i++) {
 	    if (RSZFile[i].RSZHeader.objectCount == 0) continue;
+        last_obj_indx = 0;
         for (j=0; j < RSZFile[i].RSZHeader.instanceCount; j++) {
             rszInfo="";
             if (typeMMH == RSZFile[i].InstanceInfos.instanceInfo[j].typeId.Hash){
 			    //searchOffset(i, typeMMH, j);
-                objectID = searchObjByInst(i, j);
-                SPrintf(temp,"RSZType[%d],typeHash:%08X,instIdx:%d,objIdx:%d",i, typeMMH, j, objectID);
+                last_obj_indx = searchObjByInst_withStart(i, j, last_obj_indx);
+                SPrintf(temp,"RSZType[%d],typeHash:%08X,instIdx:%d,objIdx:%d",i, typeMMH, j, last_obj_indx);
                 rszInfo+=temp;
                 if (i == id_Actions || i == id_StaticActions){
 			        instance_BHVTHash = GetRSZVarAsUint(i, typeMMH, j, 1);
@@ -185,7 +221,7 @@ void findHashOccurNode(uint32 typeMMH){ //search occur by murmurhash of type nam
                     if (typeMMH == 556540062){
 	                    SPrintf(temp,",useNum:%d,recastTime:%d" ,GetRSZVarAsUint(i, typeMMH, j, 2), GetRSZVarAsUint(i, typeMMH, j, 3));                      
                         rszInfo+=temp;}
-
+                    
                     if (GetNodeIDByActionBHVTHash(instance_BHVTHash,rszInfo) == 0)
                         Printf(rszInfo+",Node[NaN]ID:0x00000000,\n");
 
@@ -198,7 +234,7 @@ void findHashOccurNode(uint32 typeMMH){ //search occur by murmurhash of type nam
                     
                     SPrintf(temp,",BHVTHash(%d):%08X", enable, instance_BHVTHash);
                     rszInfo+=temp;
-                    if (GetNodeIDByConditionBHVTID(objectID, i, rszInfo) == 0)
+                    if (GetNodeIDByConditionBHVTID(last_obj_indx, i, rszInfo) == 0)
                         Printf(rszInfo+",Node[NaN]ID:0x00000000,\n");
 
                 } else if (i == id_TransitionEvents /*|| i == id_StaticTransitionEvents*/) {
@@ -207,7 +243,7 @@ void findHashOccurNode(uint32 typeMMH){ //search occur by murmurhash of type nam
                     
                     SPrintf(temp,",BHVTHash(%d):%08X", enable, instance_BHVTHash);
                     rszInfo+=temp;
-                    if (GetNodeIDByTransitionBHVTID(objectID, i,rszInfo) == 0)
+                    if (GetNodeIDByTransitionBHVTID(last_obj_indx, i,rszInfo) == 0)
                         Printf(rszInfo+",Node[NaN]ID:0x00000000,\n");
 
                 } else if (i == id_ExpressionTreeConditions || i == id_StaticExpressionTreeConditions) {
@@ -229,6 +265,26 @@ int searchObjByInst(uint RSZType, uint instID){
     local uint k = 0;
     local int objectID = -1;
     for (k = 0; k < RSZFile[RSZType].RSZHeader.objectCount; k++){
+        if(RSZFile[RSZType].ObjectTable[k] == instID){
+            objectID = k;
+            return objectID;
+        }
+    }
+    return -1;
+}
+
+
+int searchObjByInst_withStart(uint RSZType, uint instID, uint start){
+
+    local uint k = 0;
+    local int objectID = -1;
+    for (k = start; k < RSZFile[RSZType].RSZHeader.objectCount; k++){
+        if(RSZFile[RSZType].ObjectTable[k] == instID){
+            objectID = k;
+            return objectID;
+        }
+    }
+    for (k = 0; k < start; k++){
         if(RSZFile[RSZType].ObjectTable[k] == instID){
             objectID = k;
             return objectID;
@@ -476,28 +532,30 @@ uint32 mmh3 (byte key[], uint32 length , uint32 seed){
 }
 
 
-void findMotion2(){ //optimize to csv
+void findMotion2(uint typeMMH){ //optimize to csv
     local TFindResults r;
     local uint i,j = 0;
     local int count=0;
     local uint instance_BHVTHash = 0;
     local int enable = 0;
-    local int objectID = -1;
-    local uint32 typeMMH = 0x25887C4B;
     local string rszInfo = "";
     local string temp = "";
+    local uint last_obj_indx = 0;
+    local uint last_node_indx = 0;
 
-    for (i = 0; i < 1; i++) {
+    for (i = 0; i < 11; i++) {
+	    if (RSZFile[i].RSZHeader.objectCount == 0) continue;
+        last_obj_indx = 0;
+        last_node_indx = 0;
         for (j=0; j < RSZFile[i].RSZHeader.instanceCount; j++) {
             rszInfo = "";
             if (typeMMH == RSZFile[i].InstanceInfos.instanceInfo[j].typeId.Hash){
 			    //searchOffset(i, typeMMH, j);
-                objectID = searchObjByInst(i, j);
-                SPrintf(temp, "%d,%08X,%d,%d",i, typeMMH, j, objectID);
+                last_obj_indx = searchObjByInst_withStart(i, j, last_obj_indx);
+                SPrintf(temp, "%d,%08X,%d,%d",i, typeMMH, j, last_obj_indx);
                 rszInfo += temp;
 			    instance_BHVTHash = GetRSZVarAsUint(i, typeMMH, j, 1);
 			    enable = GetRSZVarAsUint(i, typeMMH, j, 0);
-
                 SPrintf(temp,",%d,%08X", enable, instance_BHVTHash);
                 rszInfo += temp;
                 SPrintf(temp,",%d,%d" ,GetRSZUint(i, typeMMH, j, 3), GetRSZUint(i, typeMMH, j, 4));
@@ -516,7 +574,6 @@ uint GetRSZUint(uint RSZType, uint typeMMH, uint instID, uint varIdx){
 }
 
 uint GetMotion2NodeID(uint ActionBHVTHash, string rszInfo){
-    local int varItr = 0;
     local uint i,j = 0;
     local int NodeCount = BehaviorTree.NodeCount;
     local int ActionCount = 0;
