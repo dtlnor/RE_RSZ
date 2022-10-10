@@ -32,15 +32,16 @@ local int       ShowEnum          <hidden=true>        = TRUE;                  
 local wstring NoesisPath <hidden=true> =              "C:\\Program Files\\noesis\\Noesis.exe";
 
 //Game							                      //Extracted Path
-local wstring DMC5Path <hidden=true>   =              "F:\\modmanager\\REtool\\DMC_chunk_000\\natives\\x64\\";
-local wstring RE2Path <hidden=true>    =              "F:\\modmanager\\REtool\\RE2_chunk_000\\natives\\x64\\";
-local wstring RE3Path <hidden=true>    =              "F:\\modmanager\\REtool\\RE3_chunk_000\\natives\\stm\\";
-local wstring RE7Path <hidden=true>    =              "F:\\modmanager\\REtool\\RE7_chunk_000\\natives\\x64\\";
-local wstring RE8Path <hidden=true>    =              "F:\\modmanager\\REtool\\RE8_chunk_000\\natives\\stm\\";
-local wstring MHRPath <hidden=true>    =              "F:\\modmanager\\REtool\\MHR_chunk_000\\natives\\stm\\";
-local wstring RE2RTPath <hidden=true>  =              "F:\\modmanager\\REtool\\RE2RT_chunk_000\\natives\\stm\\";
-local wstring RE3RTPath <hidden=true>  =              "F:\\modmanager\\REtool\\RE3RT_chunk_000\\natives\\stm\\";
-local wstring RE7RTPath <hidden=true>  =              "F:\\modmanager\\REtool\\RE7RT_chunk_000\\natives\\stm\\";
+local wstring DMC5Path <hidden=true>     =              "F:\\modmanager\\REtool\\DMC_chunk_000\\natives\\x64\\";
+local wstring RE2Path <hidden=true>      =              "F:\\modmanager\\REtool\\RE2_chunk_000\\natives\\x64\\";
+local wstring RE3Path <hidden=true>      =              "F:\\modmanager\\REtool\\RE3_chunk_000\\natives\\stm\\";
+local wstring RE7Path <hidden=true>      =              "F:\\modmanager\\REtool\\RE7_chunk_000\\natives\\x64\\";
+local wstring RE8Path <hidden=true>      =              "F:\\modmanager\\REtool\\RE8_chunk_000\\natives\\stm\\";
+local wstring MHRPath <hidden=true>      =              "F:\\modmanager\\REtool\\MHR_chunk_000\\natives\\stm\\";
+local wstring RE2RTPath <hidden=true>    =              "F:\\modmanager\\REtool\\RE2RT_chunk_000\\natives\\stm\\";
+local wstring RE3RTPath <hidden=true>    =              "F:\\modmanager\\REtool\\RE3RT_chunk_000\\natives\\stm\\";
+local wstring RE7RTPath <hidden=true>    =              "F:\\modmanager\\REtool\\RE7RT_chunk_000\\natives\\stm\\";
+local wstring SF6Path <hidden=true>      =              "F:\\modmanager\\REtool\\SF6Beta_chunk_000\\natives\\stm\\";
 
 //RSZ Parser By Darkness:
 #link "RSZParser.dll"
@@ -118,10 +119,15 @@ if (AutoDetectGame) {
     o = 0;
     local string xFmt <hidden=true> = "x64\\";
 
-    if (find(dir, "dmc") != -1 || find(dir, "evil may") != -1) {
+    if (find(dir, "dmc5") != -1 || find(dir, "dmc 5") != -1 || find(dir, "evil may") != -1) {
 	    RSZVersion = "DMC5"; o = 1;
 	    extractedDir = DMC5Path;
         Printf("Detected DMC in filepath\n");
+    } else if (find(dir, "sf6") != -1 || find(dir, "reet ?[Ff]ighter") != -1) {
+	    RSZVersion = "SF6"; o = 1;
+	    extractedDir = SF6Path;
+        xFmt = "stm\\";
+        Printf("Detected SF6 in filepath\n");
     } else if (find(dir, "re2") != -1 || find(dir, "evil 2") != -1) {
         RSZVersion = "RE2"; o = 1;
         if (RTVersion) {
@@ -182,9 +188,9 @@ ParseJson(JsonPath);
 if ( RSZOffset > -1 && AutoDetectGame && !(RSZVersion == "RE7" && !RTVersion))
     AutoDetectVersion();
 
-local string VisibleRSZVersion <name="Game Version"> = RSZVersion;
+local string GameVersion = RSZVersion;
 if (RTVersion)
-    local int VisibleRT <name="Ray Tracing Version"> = RTVersion;
+    local int IsRayTracing = RTVersion;
 
 //============================
 //Special functions & structs:
@@ -1269,6 +1275,7 @@ typedef struct(uint32 classHash, uint16 fieldIndex) {
                 if (FTell()+4 <= FileSize())
 				    ubyte data <name="ubyte R">, data <name="ubyte G">, data <name="ubyte B">, data <name="ubyte A">;
 				break;
+            
 			case F32_tid:
 				fieldDataType = "Float";
 				if (FTell()+4 <= FileSize())
@@ -1377,6 +1384,7 @@ typedef struct(uint32 classHash, uint16 fieldIndex) {
                 if (FTell()+2 <= FileSize())
 				    short data;
 				break;
+            case Sfix_tid:
 			case S32_tid:
 				fieldDataType = "Int";
 				if (FTell()+4 <= FileSize())
@@ -1439,13 +1447,20 @@ typedef struct(uint32 classHash, uint16 fieldIndex) {
 				    float data <name="float x">, data <name="float y">, data <name="float z">, data <name="float w">;
                 }
 				break;
+            case Sfix2_tid:
 			case Int2_tid:
                 if (FTell()+8 <= FileSize())
 				    int32 data <name="int x">, data <name="int y">;
                 break;
+            case Sfix3_tid:
             case Int3_tid:
                 if (FTell()+12 <= FileSize())
 				    int32 data <name="int x">, data <name="int y">, data <name="int z">;
+                break;  
+            case Sfix4_tid:
+            case Int4_tid:
+                if (FTell()+16 <= FileSize())
+				    int32 data <name="int x">, data <name="int y">, data <name="int z">, data <name="int w">;
                 break;  
             case Uint3_tid:
                 if (FTell()+12 <= FileSize())
@@ -3010,12 +3025,13 @@ typedef enum {
     id_RCOL = 1280262994,
     id_mfs2 = 846423661,
     id_BHVT = 1414940738,
-    id_uvar = 1918989941
+    id_uvar = 1918989941,
+    id_fchr = 1919443814,
 } MAGIC;
 
 //Start of reading File =====================================================================================================================================
 FSeek(0);
-if (ReadUInt(0)==id_SCN || ReadUInt(0)==id_PFB || ReadUInt(0)==id_USR || ReadUInt(0)==id_RCOL || ReadUInt(4)==id_mfs2 || ReadUInt(0)==id_BHVT )
+if (ReadUInt(0)==id_SCN || ReadUInt(0)==id_PFB || ReadUInt(0)==id_USR || ReadUInt(0)==id_RCOL || ReadUInt(4)==id_mfs2 || ReadUInt(0)==id_BHVT || ReadUInt(4)==id_fchr)
     struct {
         HashGenerator HashMaker <name="Hash Generator">;
         FSkip(-1);
@@ -3094,6 +3110,7 @@ if (ReadUInt(0)==id_SCN || ReadUInt(0)==id_PFB || ReadUInt(0)==id_USR || ReadUIn
                 uint64 autoGenerateJointDescTbl;
             }
         }
+        
         if (magic == id_SCN) {
             MAGIC signature;
             int infoCount;
@@ -3113,6 +3130,42 @@ if (ReadUInt(0)==id_SCN || ReadUInt(0)==id_PFB || ReadUInt(0)==id_USR || ReadUIn
             if (RSZVersion != "RE7" || RTVersion) 
                 uint64 userdataInfoTbl;
             uint64 dataOffset;
+        }
+        
+        if (magic == id_fchr) {
+            uint version;
+            uint magic;
+            uint64 ukn0;
+            uint64 ukn1;
+            uint64 ukn2;
+            uint64 objsOffs;
+            uint64 ukn4;
+            uint64 ukn5;
+            uint64 StringsOffs;
+            uint64 MainRSZ;
+            uint64 FileSize;
+            uint ukn00;
+            uint ukn01;
+            uint numObjs;
+            uint StringsCount;
+            
+            FSeek(objsOffs);
+            struct {
+                for (i=0; i<numObjs;i++)
+                    uint32 objID;
+            } uknObjs;
+
+            FSeek(ukn4);
+            struct {
+                for (i=0; i<numObjs;i++)
+                    uint64 uknOffs;
+            } uknOffsets;
+
+            FSeek(StringsOffs);
+            struct {
+                for (i=0; i<StringsCount;i++)
+                    StringRead ukn(-1, 0, 0);
+            } Strings;
         }
 
         if (exists(dataOffset) && ReadUInt(dataOffset) != 5919570)
@@ -5887,7 +5940,10 @@ if (RSZOffset > -1) {
     FSeek(RSZOffset);
     if (ReadUInt(0) == id_PFB || ReadUInt(0) == id_SCN) // SCN or PFB
         { FSkip(-1); BLANK __; FSkip(-1); BLANK ___ <name=ReadMainDataNotice>; }
-    while (FTell()+4 <= FileSize()) {
+
+//TEST fchr
+
+    while (FTell()+4 <= FileSize()) { //&& level < 5
         if ( ReadUInt(FTell()) == 5919570 ) { //RSZ
             finished = false;
             if (level == 1 && !FEof()) { 
