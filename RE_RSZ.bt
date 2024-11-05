@@ -13,7 +13,7 @@
 //      Note: It is recommended to use this template with 010 Editor v9.0.2 or v10.0.2, to avoid crashes, particulary when using RE_RSZ_ChangeValues.1sc
 //------------------------------------------------
 //              Option:                                                             //Effect:
-local string    RSZVersion        <hidden=true>        = "DD2";                     //change between RE2, RE3, RE8, DMC5, MHRise, DDR, DRDR, SF6
+local string    RSZVersion        <hidden=true>        = "MHWilds";                     //change between RE2, RE3, RE8, DMC5, MHRise, DDR, DRDR, SF6
 local int       RTVersion         <hidden=true>        = TRUE;                      //Use Ray-Tracing Update file formats for RE7, RE2R and RE3R (subject to AutoDetectGame)
 local int       Nesting           <hidden=true>        = TRUE;                      //Attempt to nest class instances inside eachother
 local int       ShowAlignment     <hidden=true>        = FALSE;                     //Show metadata for each variable
@@ -3275,7 +3275,7 @@ if (ReadUInt(0)==id_SCN || ReadUInt(0)==id_PFB || ReadUInt(0)==id_USR || ReadUIn
                     uint32 ukn;
                 }
             }
-            if (RSZVersion == "RE4" || RSZVersion == "DD2")
+            if (RSZVersion == "RE4" || RSZVersion == "DD2" || RSZVersion == "MHWilds")
                 uint64 ukn;
             uint64 groupsPtrTbl;
             uint64 dataOffset <name="userDataStreamPtr">;
@@ -6348,7 +6348,7 @@ if (ReadUInt(0) == id_RCOL) {
                 rGUID Guid;
                 StringRead Name(-1, 0, 0);
                 uint NameHash <format=hex>;
-                if (RSZVersion == "RE4" || RSZVersion == "DD2") {
+                if (RSZVersion == "RE4" || RSZVersion == "DD2" || RSZVersion == "MHWilds") {
                     int NumShapes;
                     int UserDataIndex;
                 } else {
@@ -6455,7 +6455,7 @@ if (ReadUInt(0) == id_RCOL) {
                         int GroupIndex;
                         int ShapeOffset;
                         uint status;
-                        if (RSZVersion == "RE4" || RSZVersion == "DD2") {
+                        if (RSZVersion == "RE4" || RSZVersion == "DD2" || RSZVersion == "MHWilds") {
                             uint uknA, uknB;
                             StringRead Name(-1, 0, 0);
                             StringRead KeyName(-1, 0, 0);
@@ -6497,7 +6497,7 @@ if (ReadUInt(0) == id_RCOL) {
 
     wstring ReadGroup(RcolGroup &g) { return ReadWString(ReadUInt64(startof(g)+16)); }
 
-    wstring ReadRequestSet(RcolRequestSet &a) { return ReadWString(ReadUInt(startof(a)+16+(8*(RSZVersion=="RE4" || RSZVersion=="DD2")))); }
+    wstring ReadRequestSet(RcolRequestSet &a) { return ReadWString(ReadUInt(startof(a)+16+(8*(RSZVersion=="RE4" || RSZVersion=="DD2" || RSZVersion == "MHWilds")))); }
 
     wstring ReadRequestSetName(RcolRequestSet &a) { string s; SPrintf(s, "RequestSet ID: %u  ", ReadUInt(startof(a))); return s; }
 
