@@ -47,6 +47,7 @@ local wstring GTrickPath <hidden=true>   =              "F:\\modmanager\\REtool\
 local wstring ApolloPath <hidden=true>   =              "F:\\modmanager\\REtool\\Apollo_chunk_000\\natives\\stm\\";
 local wstring DD2Path <hidden=true>      =              "H:\\Modding\\REtool\\DD2_chunk_000\\natives\\stm\\";
 local wstring DRDRPath <hidden=true>      =             "H:\\Modding\\REtool\\DRDR_chunk_000\\natives\\stm\\";
+local wstring MHWSPath <hidden=true>      =             "H:\\Modding\\REtool\\MHWS_chunk_000\\natives\\stm\\";
 
 //RSZ Parser By Darkness:
 #link "RSZParser.dll"
@@ -188,6 +189,11 @@ if (AutoDetectGame) {
 	    extractedDir = Lower(MHRPath);
 	    xFmt = "stm\\";
         Printf("Detected MHRise in filepath\n");
+    }  else if (find(dir, "\\mhws") != -1 || find(dir, "nter W") != -1 || find(dir, "Wilds") != -1) {
+	    RSZVersion = "MHWilds"; o = 1;
+	    extractedDir = Lower(MHWSPath);
+	    xFmt = "stm\\";
+        Printf("Detected MHWilds in filepath\n");
     } else if (find(dir, "\\gt") != -1 || find(dir, "host ?tr") != -1 || find(dir, "trick") != -1) {
 	    RSZVersion = "GTrick"; o = 1;
 	    extractedDir = Lower(GTrickPath);
@@ -301,6 +307,7 @@ void AutoDetectVersion() {
                         case 7: RSZVersion = "RE4"; extractedDir = RE4Path; xFmt = "stm\\"; break;
                         case 8: RSZVersion = "DD2"; extractedDir = DD2Path; xFmt = "stm\\"; break;
                         case 9: RSZVersion = "DRDR"; extractedDir = DRDRPath; xFmt = "stm\\"; break;
+                        case 10: RSZVersion = "MHWilds"; extractedDir = MHWSPath; xFmt = "stm\\"; break;
                         default: break;
                     }
                     
