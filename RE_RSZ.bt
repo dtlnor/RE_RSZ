@@ -6548,7 +6548,7 @@ if (ReadUInt(0) == id_RCOL) {
                             uint KeyHash <format=hex>;
                         }
                     } RequestSetInfo <name="[RequestSetInfo]", read=readRequestSetInfoCombinedKey>;
-                    local ushort ObjectIndex <hidden=true> = RSZFile.ObjectTable[RequestSetInfo.Index];
+                    local ushort ObjectIndex <hidden=true> = RSZFile.ObjectTable[RequestSetInfo.ShapeOffset];
                     FSeek(startof(Groups.Group[RequestSetInfo.GroupIndex]));
                     struct RcolGroup Group <size=80>;
                     
