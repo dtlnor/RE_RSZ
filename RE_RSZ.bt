@@ -1398,8 +1398,13 @@ typedef struct(uint32 classHash, uint16 fieldIndex) {
 				    float data <name="float x">, data <name="float y">;
 				break;
 			case Float3_tid:
+            case Sphere_tid:
 				if (FTell()+12 <= FileSize())
 				    float data <name="float x">, data <name="float y">, data <name="float z">;
+                    if (fieldType == Sphere_tid) {
+                        if (FTell()+4 <= FileSize())
+				            float data <name="float r">;
+                    }
 				break;
 			case Quaternion_tid:
 			case Float4_tid:
@@ -2038,6 +2043,7 @@ typedef struct(uint32 classHash, uint16 fieldIndex) {
                 case Mat4_tid:
                 case Float4_tid:
 				case Quaternion_tid:
+                case Sphere_tid:
                     if (exists(r.data))
                         SPrintf(s, "[%g, %g, %g, %g]", r.data[0], r.data[1], r.data[2], r.data[3]);
                     break;
@@ -2272,6 +2278,7 @@ typedef struct(uint32 classHash, uint16 fieldIndex) {
                 case KeyFrame_tid:
                 case Float4_tid:
                 case Quaternion_tid:
+                case Sphere_tid:
                     WriteRSZArray(r, s, 4, 4, false);
                     break;
                 case Color_tid:
