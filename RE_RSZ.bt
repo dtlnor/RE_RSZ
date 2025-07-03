@@ -1398,13 +1398,8 @@ typedef struct(uint32 classHash, uint16 fieldIndex) {
 				    float data <name="float x">, data <name="float y">;
 				break;
 			case Float3_tid:
-            case Sphere_tid:
 				if (FTell()+12 <= FileSize())
 				    float data <name="float x">, data <name="float y">, data <name="float z">;
-                    if (fieldType == Sphere_tid) {
-                        if (FTell()+4 <= FileSize())
-				            float data <name="float r">;
-                    }
 				break;
 			case Sphere_tid:
 				if (FTell()+16 <= FileSize())
