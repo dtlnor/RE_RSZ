@@ -1744,6 +1744,23 @@ typedef struct(uint32 classHash, uint16 fieldIndex) {
                 } else 
                     FSeek(startof(this));
 				break;
+
+			case C8_tid:
+                // Please note that there is no actual single char in RSZ before.
+                // So I take this code as the single byte string type.
+                fieldType = C8_tid;
+				fieldDataType = "C8";
+                FSeek(getAlignedOffset(FTell(), 4));
+                if (FTell() + 4 <= FileSize()) {
+				    uint size;
+                    if (size && FTell() + size <= FileSize() )
+					    char data[size] <open=suppress>;
+                    if (size > 0 && !exists(data) && !detectedFloat(FTell()-4)) 
+                        setAsBroken();
+                    local ubyte isString <hidden=true> = TRUE;
+                } else 
+                    FSeek(startof(this));
+				break;
             
 			default:
 				Printf("%u Unknown type %s in class \"%s\" (Hash: 0x%08X) field number %d returned TypeID = \"%d\" ListFlag = \"%d\"\r\n", 
@@ -2013,6 +2030,10 @@ typedef struct(uint32 classHash, uint16 fieldIndex) {
                     break;
 		        case Resource_tid:
                 case String_tid:
+                    if (exists(r.data))
+                        return r.data;
+                    break;
+                case C8_tid:
                     if (exists(r.data))
                         return r.data;
                     break;
